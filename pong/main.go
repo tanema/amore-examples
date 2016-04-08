@@ -55,6 +55,7 @@ var (
 
 func main() {
 	window.SetMouseVisible(false)
+	window.SetIcon("images/icon.png")
 	blip, _ = audio.NewSource("audio/blip.wav", false)
 	bomb, _ = audio.NewSource("../test-all/assets/audio/bomb.wav", false)
 	amore.Start(update, draw)
