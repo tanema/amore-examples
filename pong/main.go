@@ -20,9 +20,7 @@ const (
 )
 
 var (
-	gameOver      = false
-	blip          *audio.Source
-	bomb          *audio.Source
+	gameOver              = false
 	enemyPosition float32 = 0
 
 	player = &Paddle{
@@ -51,13 +49,14 @@ var (
 		speed:  ballSpeed,
 		color:  gfx.NewColor(255, 0, 0, 255),
 	}
+
+	blip, _ = audio.NewSource("audio/blip.wav", true)
+	bomb, _ = audio.NewSource("../test-all/assets/audio/bomb.wav", true)
 )
 
 func main() {
 	window.SetMouseVisible(false)
 	window.SetIcon("images/icon.png")
-	blip, _ = audio.NewSource("audio/blip.wav", false)
-	bomb, _ = audio.NewSource("../test-all/assets/audio/bomb.wav", false)
 	amore.Start(update, draw)
 }
 
@@ -80,12 +79,18 @@ func update(dt float32) {
 	ball.Update(dt)
 
 	// enemy movements
-	enemyY := enemy.y + (enemy.height / 2)
+	enemyY := enemy.y + (enemy.height / 3)
 	if ball.y < enemyY {
 		enemy.y -= enemy.speed * dt
 	} else if ball.y > enemyY {
 		enemy.y += enemy.speed * dt
 	}
+
+	//if keyboard.IsDown(keyboard.KeyW) {
+	//enemy.y -= enemy.speed * dt
+	//} else if keyboard.IsDown(keyboard.KeyS) {
+	//enemy.y += enemy.speed * dt
+	//}
 
 	// player movements
 	if keyboard.IsDown(keyboard.KeyUp) {
