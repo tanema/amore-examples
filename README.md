@@ -1,6 +1,6 @@
 # amore-examples
 
-examples for the amore game framework
+Examples meant to demonstrate the [Amore Game Framework](https://github.com/tanema/amore)
 
 ### test-all
 
