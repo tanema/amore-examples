@@ -1,5 +1,4 @@
-title = "Amore : Pong"   	# The window title (string)
-icon = "images/icon.png"  # Filepath to an image to use as the window's icon (string)
+title = "Amore : Asteroids" # The window title (string)
 width = 800               # The window width (number)
 height = 600              # The window height (number)
 vsync = true              # Enable vertical sync (boolean)

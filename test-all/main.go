@@ -35,7 +35,7 @@ var (
 
 func main() {
 	window.SetMouseVisible(false)
-	keyboard.SetKeyReleaseCB(keyUp)
+	keyboard.OnKeyUp = keyUp
 
 	canvas = gfx.NewCanvas(800, 600)
 	tree, _ = gfx.NewImage("images/palm_tree.png")

@@ -22,6 +22,8 @@ const (
 var (
 	gameOver              = false
 	enemyPosition float32 = 0
+	screenWidth   float32
+	screenHeight  float32
 
 	player = &Paddle{
 		x:      800 - paddleWidth,
@@ -56,8 +58,13 @@ var (
 
 func main() {
 	window.SetMouseVisible(false)
-	window.SetIcon("images/icon.png")
+	amore.OnLoad = load
 	amore.Start(update, draw)
+}
+
+func load() {
+	screenWidth = gfx.GetWidth()
+	screenHeight = gfx.GetHeight()
 }
 
 func update(dt float32) {
@@ -117,7 +124,8 @@ func draw() {
 	halfWidth := gfx.GetFont().GetWidth(scoreLabel) / 2
 	gfx.SetColor(255, 255, 255, 255)
 	gfx.Print(fmt.Sprintf("%v : %v", enemy.score, player.score), gfx.GetWidth()/2-halfWidth, 10)
-	gfx.Line(gfx.GetWidth()/2, 20, gfx.GetWidth()/2, gfx.GetHeight())
+	gfx.SetLineWidth(3)
+	gfx.Line(gfx.GetWidth()/2+1, 25, gfx.GetWidth()/2+1, gfx.GetHeight())
 
 	ball.Draw()
 	enemy.Draw()
@@ -167,9 +175,6 @@ func (ball *Ball) Reset() {
 func (ball *Ball) Update(dt float32) {
 	ball.x += ball.speed * ball.vx * dt
 	ball.y += ball.speed * ball.vy * dt
-
-	screenWidth := gfx.GetWidth()
-	screenHeight := gfx.GetHeight()
 
 	// enemy's wall
 	if ball.x <= ball.radius {
