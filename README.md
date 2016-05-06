@@ -25,3 +25,9 @@ yourself.
 Physics demonstrates the usage of [github.com/neguse/go-box2d-lite](https://github.com/neguse/go-box2d-lite)
 in amore, for more in depth physics. Normally for most games you dont need this 
 level of physics but it's nice to know that it's there.
+
+
+### racer
+
+A pseudo 3d car racer implemented from the [codeincomplete.com](http://codeincomplete.com/posts/2012/6/22/javascript_racer/)
+tutorial. Assets are also from that tutorial.
