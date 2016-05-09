@@ -101,6 +101,8 @@ func Draw() {
 		dx = dx + segment.curve
 	}
 
+	gfx.SetBackgroundColorC(colors["fog"])
+	gfx.SetColor(255, 255, 255, 255)
 	drawBackground(width, height, backgrounds["sky"], skyOffset, resolution*skySpeed*playerY)
 	drawBackground(width, height, backgrounds["hills"], hillOffset, resolution*hillSpeed*playerY)
 	drawBackground(width, height, backgrounds["trees"], treeOffset, resolution*treeSpeed*playerY)
