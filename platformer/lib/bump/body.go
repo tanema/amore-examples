@@ -20,7 +20,7 @@ type (
 		Draw()
 	}
 	Body struct {
-		entity  Entity
+		Entity  Entity
 		world   *World
 		tag     string
 		x       float32

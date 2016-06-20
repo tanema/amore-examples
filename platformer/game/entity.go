@@ -1,14 +1,27 @@
 package game
 
+import (
+	"github.com/tanema/amore-examples/platformer/lib/bump"
+
+	"github.com/tanema/amore/gfx"
+)
+
 const gravityAccel float32 = 500 // pixels per second^2
 
 type Entity struct {
 	l, t, w, h float32
 	vx, vy     float32
+	*bump.Body
+	world *bump.World
 }
 
-func newEntity(l, t, w, h float32) *Entity {
-	return &Entity{l: l, t: t, w: w, h: h}
+func newEntity(world *bump.World, l, t, w, h float32) *Entity {
+	return &Entity{world: world, l: l, t: t, w: w, h: h}
+}
+
+func (entity *Entity) Draw() {
+	gfx.SetColor(255, 255, 255, 255)
+	gfx.Rect(gfx.LINE, entity.l, entity.t, entity.w, entity.h)
 }
 
 func (entity *Entity) changeVelocityByGravity(dt float32) {

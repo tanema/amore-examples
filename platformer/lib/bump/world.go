@@ -22,6 +22,7 @@ func NewWorld(cellSize int) *World {
 		cellSize:  float32(cellSize),
 		rows:      make(map[int]map[int]*Cell),
 		responses: map[string]Resp{},
+		bodies:    map[Entity]*Body{},
 	}
 
 	world.AddResponse("touch", world.touch)
@@ -141,7 +142,7 @@ func (world *World) traceRay(x1, y1, x2, y2 float32, f func(cx, cy int)) {
 
 func (world *World) Add(entity Entity, tag string, left, top, width, height float32, respMap map[string]string) *Body {
 	body := &Body{
-		entity:  entity,
+		Entity:  entity,
 		world:   world,
 		tag:     tag,
 		x:       left,
@@ -228,7 +229,7 @@ func (world *World) getEntitiesInCells(cells []*Cell) []Entity {
 	for _, cell := range cells {
 		for _, body := range cell.bodies {
 			if _, ok := dict[body]; !ok {
-				entities = append(entities, body.entity)
+				entities = append(entities, body.Entity)
 				dict[body] = true
 			}
 		}

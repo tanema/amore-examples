@@ -1,57 +1,45 @@
 package game
 
 import (
-	"github.com/tanema/amore-examples/platformer/lib/gamera"
-
-	"github.com/tanema/amore/gfx"
-	"github.com/tanema/amore/keyboard"
+	"github.com/tanema/amore-examples/platformer/lib/bump"
+	//"github.com/tanema/amore-examples/platformer/lib/gamera"
 )
 
 const (
 	updateRadius float32 = 100 // how "far away from the camera" things stop being updated
-	instructions         = `
-  bump.lua demo
-    left,right: move
-    up:     jump/fly
-    return: reset map
-    tab:    toggle debug info`
 )
 
 var (
-	width     float32 = 4000
-	height    float32 = 2000
-	camera    *gamera.Camera
-	game_map  *Map
-	drawDebug = false // draw bump's debug info, fps and memory
+	width  float32 = 4000
+	height float32 = 2000
+	//camera *gamera.Camera
+	player *Player
+	block  *Block
+	world  *bump.World
 )
 
 func New() {
-	keyboard.OnKeyUp = keyup
-	camera = gamera.New(0, 0, width, height)
-	game_map = newMap(width, height, camera)
+	world = bump.NewWorld(64)
+	player = newPlayer(world, 60, 60)
+	block = newBlock(world, 0, 100, 100, 50)
+	//camera = gamera.New(0, 0, width, height)
 }
 
 func Update(dt float32) {
-	l, t, w, h := camera.GetVisible()
+	l, t, w, h := float32(0), float32(0), float32(800), float32(600) //camera.GetVisible()
 	l, t, w, h = l-updateRadius, t-updateRadius, w+updateRadius*2, h+updateRadius*2
-	game_map.update(dt, l, t, w, h)
-	camera.SetPosition(game_map.player.getCenter())
-	camera.Update(dt)
+	for _, item := range world.QueryRect(l, t, w, h) {
+		item.Entity.Update(dt)
+	}
+	//camera.SetPosition(player.l, player.t)
+	//camera.Update(dt)
 }
 
 func Draw() {
-	camera.Draw(func(l, t, w, h float32) {
-		game_map.draw(drawDebug, l, t, w, h)
-	})
-	gfx.SetColor(255, 255, 255, 255)
-	gfx.Print(instructions, gfx.GetWidth()-200, 10)
-}
-
-func keyup(key keyboard.Key) {
-	if key == keyboard.KeyTab {
-		drawDebug = !drawDebug
+	l, t, w, h := float32(0), float32(0), float32(800), float32(600)
+	//camera.Draw(func(l, t, w, h float32) {
+	for _, item := range world.QueryRect(l, t, w, h) {
+		item.Entity.Draw()
 	}
-	if key == keyboard.KeyReturn {
-		game_map.reset()
-	}
+	//})
 }
