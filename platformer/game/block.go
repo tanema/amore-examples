@@ -1,23 +1,25 @@
 package game
 
 import (
-	"github.com/tanema/amore-examples/platformer/lib/bump"
+	"github.com/tanema/amore/gfx"
 )
 
 type Block struct {
-	*Entity
+	x, y, width, height float32
+	color               *gfx.Color
 }
 
-func newBlock(world *bump.World, l, t, w, h float32) *Block {
-	newBlock := &Block{
-		Entity: newEntity(world, l, t, w, h),
-	}
-	newBlock.Body = world.Add(newBlock, "block", l, t, w, h, map[string]string{})
-	return newBlock
+func NewBlock(x, y, width, height float32, color *gfx.Color) *Block {
+	return &Block{x, y, width, height, color}
 }
 
 func (block *Block) Send(event string, args ...interface{}) {
 }
 
 func (block *Block) Update(dt float32) {
+}
+
+func (block *Block) Draw() {
+	gfx.SetColorC(block.color)
+	gfx.Rect(gfx.FILL, block.x, block.y, block.width, block.height)
 }
