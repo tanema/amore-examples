@@ -76,8 +76,8 @@ func Update(dt float32) {
 		rot -= 0.01
 	}
 
-	//l, t, w, h := camera.GetVisible()
-	//l, t, w, h = l-updateRadius, t-updateRadius, w+updateRadius*2, h+updateRadius*2
+	l, t, w, h := camera.GetVisible()
+	l, t, w, h = l-updateRadius, t-updateRadius, w+updateRadius*2, h+updateRadius*2
 	//for _, item := range world.QueryRect(l, t, w, h) {
 	//item.Entity.Update(dt)
 	//}
@@ -89,7 +89,7 @@ func Update(dt float32) {
 }
 
 func Draw() {
-	camera.Draw(func() {
+	camera.Draw(func(l, t, w, h float32) {
 		for _, block := range blocks {
 			block.Draw()
 		}
