@@ -1,5 +1,9 @@
 package bump
 
+import (
+	"github.com/tanema/amore/gfx"
+)
+
 type Cell struct {
 	world  *World
 	cx     int
@@ -19,4 +23,14 @@ func (cell *Cell) leave(body *Body) {
 			return
 		}
 	}
+}
+
+func (cell *Cell) DrawDebug(cellSize float32) {
+	gfx.SetLineWidth(2)
+	if len(cell.bodies) > 0 {
+		gfx.SetColor(0, 255, 0, 200)
+	} else {
+		gfx.SetColor(0, 0, 255, 200)
+	}
+	gfx.Rect(gfx.LINE, float32(cell.cx)*cellSize, float32(cell.cy)*cellSize, cellSize, cellSize)
 }

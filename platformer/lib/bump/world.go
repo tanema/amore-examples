@@ -3,6 +3,8 @@ package bump
 import (
 	"math"
 	"sort"
+
+	"github.com/tanema/amore/gfx"
 )
 
 const defaultFilter = "slide"
@@ -62,7 +64,7 @@ func (world *World) QuerySegment(x1, y1, x2, y2 float32) []*Body {
 	bodies := []*Body{}
 	visited := map[*Body]bool{}
 	for _, body := range world.getBodiesInCells(world.getCellsTouchedBySegment(x1, y1, x2, y2)) {
-		if _, ok := visited[body]; ok {
+		if _, ok := visited[body]; !ok {
 			visited[body] = true
 			ok, ti1, ti2, _, _, _, _ := body.getSegmentIntersectionIndices(x1, y1, x2, y2, 0, 1)
 			if ok && ((0 < ti1 && ti1 < 1) || (0 < ti2 && ti2 < 1)) {
@@ -145,8 +147,6 @@ func (world *World) Add(entity Entity, tag string, left, top, width, height floa
 		Entity:  entity,
 		world:   world,
 		tag:     tag,
-		x:       left,
-		y:       top,
 		width:   width,
 		height:  height,
 		cells:   []*Cell{},
@@ -178,7 +178,7 @@ func (world *World) Check(entity Entity, goalX, goalY float32) (gx, gy float32, 
 	return body.check(goalX, goalY)
 }
 
-func (world *World) addToCell(body *Body, cx, cy int) {
+func (world *World) addToCell(body *Body, cx, cy int) *Cell {
 	row, ok := world.rows[cy]
 	if !ok {
 		world.rows[cy] = make(map[int]*Cell)
@@ -190,6 +190,7 @@ func (world *World) addToCell(body *Body, cx, cy int) {
 		cell = row[cx]
 	}
 	cell.enter(body)
+	return cell
 }
 
 func (world *World) cellsInRect(l, t, w, h float32) []*Cell {
@@ -240,11 +241,11 @@ func (world *World) getEntitiesInCells(cells []*Cell) []Entity {
 func (world *World) gridToCellRect(x, y, w, h float32) (cx, cy, cw, ch int) {
 	cx, cy = world.cellAt(x, y)
 	cr, cb := int(math.Ceil(float64((x+w)/world.cellSize))), int(math.Ceil(float64((y+h)/world.cellSize)))
-	return cx, cy, cr - cx + 1, cb - cy + 1
+	return cx, cy, cr - cx, cb - cy
 }
 
 func (world *World) cellAt(x, y float32) (cx, cy int) {
-	return int(math.Floor(float64(x/world.cellSize))) + 1, int(math.Floor(float64(y/world.cellSize))) + 1
+	return int(math.Floor(float64(x / world.cellSize))), int(math.Floor(float64(y / world.cellSize)))
 }
 
 func (world *World) Project(body *Body, goalX, goalY float32) []*Collision {
@@ -257,22 +258,30 @@ func (world *World) Project(body *Body, goalX, goalY float32) []*Collision {
 
 	tw, th := tr-tl, tb-tt
 
+	visited := map[*Body]bool{}
+
 	bodies := world.getBodiesInCells(world.cellsInRect(tl, tt, tw, th))
 	for _, other := range bodies {
-		if col := body.collide(other, goalX, goalY); col != nil {
-			col.Body = body
-			col.Other = other
+		if _, ok := visited[body]; !ok {
+			visited[body] = true
 
-			var ok bool
-			col.RespType, ok = body.respMap[other.tag]
-			if !ok {
-				col.RespType = defaultFilter
+			if col := body.collide(other, goalX, goalY); col != nil {
+				col.Body = body
+				col.Other = other
+
+				var ok bool
+				col.RespType, ok = body.respMap[other.tag]
+				if !ok {
+					col.RespType = defaultFilter
+				}
+
+				collisions = append(collisions, col)
 			}
-
-			collisions = append(collisions, col)
 		}
 	}
+
 	sort.Sort(CollisionsByDistance(collisions))
+
 	return collisions
 }
 
@@ -299,9 +308,13 @@ func (world *World) slide(col *Collision, body *Body, goalX, goalY float32) (flo
 	}
 
 	col.Data = Point{X: sx, Y: sy}
-	body.x, body.y = col.Touch.X, col.Touch.Y
 
-	return goalX, goalY, world.Project(body, sx, sy)
+	return sx, sy, world.Project(&Body{
+		x:      col.Touch.X,
+		y:      col.Touch.Y,
+		width:  body.width,
+		height: body.height,
+	}, sx, sy)
 }
 
 func (world *World) bounce(col *Collision, body *Body, goalX, goalY float32) (float32, float32, []*Collision) {
@@ -319,4 +332,19 @@ func (world *World) bounce(col *Collision, body *Body, goalX, goalY float32) (fl
 	col.Data = Point{X: bx, Y: by}
 	body.x, body.y = col.Touch.X, col.Touch.Y
 	return bx, by, world.Project(body, bx, by)
+}
+
+func (world *World) DrawDebug(l, t, w, h float32) {
+	cl, ct, cw, ch := world.gridToCellRect(l, t, w, h)
+	for cy := ct - 1; cy <= ct+ch-1; cy++ {
+		for cx := cl - 1; cx <= cl+cw-1; cx++ {
+			gfx.SetLineWidth(2)
+			gfx.SetColor(255, 255, 255, 200)
+			gfx.Rect(gfx.LINE, float32(cx)*world.cellSize, float32(cy)*world.cellSize, world.cellSize, world.cellSize)
+		}
+	}
+
+	for _, cell := range world.cellsInRect(l, t, w, h) {
+		cell.DrawDebug(world.cellSize)
+	}
 }

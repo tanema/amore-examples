@@ -2,6 +2,8 @@ package bump
 
 import (
 	"math"
+
+	"github.com/tanema/amore/gfx"
 )
 
 const (
@@ -41,12 +43,16 @@ func (body *Body) move(x, y float32) (gx, gy float32, cols []*Collision) {
 func (body *Body) check(goalX, goalY float32) (gx, gy float32, cols []*Collision) {
 	collisions := []*Collision{}
 	projected_cols := body.world.Project(body, goalX, goalY)
+	visited := map[*Body]bool{body: true}
 
 	for len(projected_cols) > 0 {
-		collision := projected_cols[1]
-		collisions = append(collisions, collision)
-		response := body.world.responses[collision.RespType]
-		goalX, goalY, projected_cols = response(collision, body, goalX, goalY)
+		collision := projected_cols[0]
+		if _, ok := visited[collision.Other]; !ok {
+			collisions = append(collisions, collision)
+			response := body.world.responses[collision.RespType]
+			goalX, goalY, projected_cols = response(collision, body, goalX, goalY)
+			visited[collision.Other] = true
+		}
 	}
 
 	return goalX, goalY, collisions
@@ -57,10 +63,11 @@ func (body *Body) update(x, y, w, h float32) {
 		for _, cell := range body.cells {
 			cell.leave(body)
 		}
-		cl, ct, cw, ch := body.world.gridToCellRect(body.x, body.y, body.width, body.height)
+		body.cells = []*Cell{}
+		cl, ct, cw, ch := body.world.gridToCellRect(x, y, w, h)
 		for cy := ct; cy <= ct+ch-1; cy++ {
 			for cx := cl; cx <= cl+cw-1; cx++ {
-				body.world.addToCell(body, cx, cy)
+				body.cells = append(body.cells, body.world.addToCell(body, cx, cy))
 			}
 		}
 		body.x, body.y, body.width, body.height = x, y, w, h
@@ -74,6 +81,10 @@ func (body *Body) remove() {
 }
 
 func (body *Body) collide(other *Body, goalX, goalY float32) *Collision {
+	if other == body {
+		return nil
+	}
+
 	dx, dy := goalX-body.x, goalY-body.y
 	diff := body.getDiff(other)
 
@@ -218,4 +229,11 @@ func (body *Body) distanceTo(other *Body) float32 {
 	dx := body.x - other.x + (body.width-other.width)/2
 	dy := body.y - other.y + (body.height-other.height)/2
 	return dx*dx + dy*dy
+}
+
+func (body *Body) DrawDebug() {
+	gfx.SetColor(255, 0, 0, 100)
+	gfx.Rect(gfx.FILL, body.x, body.y, body.width, body.height)
+	gfx.SetColor(0, 255, 0, 100)
+	gfx.Rect(gfx.LINE, body.x-1, body.y-1, body.width+2, body.height+2)
 }

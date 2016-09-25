@@ -33,7 +33,7 @@ func New() {
 	player = NewBlock(x, y, 50, 50, gfx.NewColor(255, 0, 0, 255))
 	world.Add(player, "player", x, y, 50, 50, map[string]string{})
 
-	for i := 0; i <= 10; i++ {
+	for i := 0; i <= 1; i++ {
 		bx, by, bw, bh := randRange(0, 800), randRange(0, 600), randRange(50, 200), randRange(50, 200)
 
 		blocks = append(blocks, NewBlock(
@@ -77,10 +77,10 @@ func Update(dt float32) {
 	}
 
 	l, t, w, h := camera.GetVisible()
-	l, t, w, h = l-updateRadius, t-updateRadius, w+updateRadius*2, h+updateRadius*2
-	//for _, item := range world.QueryRect(l, t, w, h) {
-	//item.Entity.Update(dt)
-	//}
+	for _, item := range world.QueryRect(l-updateRadius, t-updateRadius, w+updateRadius*2, h+updateRadius*2) {
+		item.Entity.Update(dt)
+	}
+	x, y, _ = world.Move(player, x, y)
 	player.x, player.y = x, y
 	camera.LookAt(x, y)
 	camera.ZoomTo(scale)
@@ -90,14 +90,10 @@ func Update(dt float32) {
 
 func Draw() {
 	camera.Draw(func(l, t, w, h float32) {
-		for _, block := range blocks {
-			block.Draw()
+		world.DrawDebug(l, t, w, h)
+		for _, item := range world.QueryRect(l, t, w, h) {
+			item.Entity.Draw()
+			item.DrawDebug()
 		}
-		player.Draw()
-		gfx.SetColor(255, 255, 255, 255)
-		gfx.Rect(gfx.FILL, -100, -100, 200, 200)
-		//for _, item := range world.QueryRect(l, t, w, h) {
-		//item.Entity.Draw()
-		//}
 	})
 }
