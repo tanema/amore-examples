@@ -237,3 +237,7 @@ func (body *Body) DrawDebug() {
 	gfx.SetColor(0, 255, 0, 100)
 	gfx.Rect(gfx.LINE, body.x-1, body.y-1, body.width+2, body.height+2)
 }
+
+func (body *Body) Position() (x, y float32) {
+	return body.x, body.y
+}
