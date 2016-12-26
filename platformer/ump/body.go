@@ -95,8 +95,8 @@ func (body *Body) collide(other *Body, goalX, goalY float32) *Collision {
 		}
 		collision.Normal = Point{X: sign(px), Y: sign(py)}
 		collision.Touch = Point{
-			X: body.x + px + collision.Normal.X,
-			Y: body.y + py + collision.Normal.Y,
+			X: body.x + px + (collision.Normal.X * delta),
+			Y: body.y + py + (collision.Normal.Y * delta),
 		}
 	} else {
 		collision.Intersection, collision.Normal.X, collision.Normal.Y = diff.getRayIntersectionFraction(0, 0, dx, dy)
@@ -104,8 +104,8 @@ func (body *Body) collide(other *Body, goalX, goalY float32) *Collision {
 			return nil
 		}
 		collision.Touch = Point{
-			X: body.x + dx*collision.Intersection + collision.Normal.X,
-			Y: body.y + dy*collision.Intersection + collision.Normal.Y,
+			X: body.x + dx*collision.Intersection + (collision.Normal.X * delta),
+			Y: body.y + dy*collision.Intersection + (collision.Normal.Y * delta),
 		}
 	}
 
