@@ -1,19 +1,18 @@
-package bump
+package ump
 
 type (
 	Point struct {
 		X, Y float32
 	}
 	Collision struct {
-		Body     *Body
-		Other    *Body
-		Move     Point
-		Normal   Point
-		Touch    Point
-		Data     Point
-		RespType string
-		overlaps bool
-		ti       float32
+		Intersection float32
+		Distance     float32
+		Body         *Body
+		Move         Point
+		Normal       Point
+		Touch        Point
+		Data         Point
+		RespType     string
 	}
 )
 
@@ -29,8 +28,8 @@ func (s CollisionsByDistance) Swap(i, j int) {
 
 func (s CollisionsByDistance) Less(i, j int) bool {
 	a, b := s[i], s[j]
-	if a.ti == b.ti {
-		return a.Body.distanceTo(a.Other) < b.Body.distanceTo(b.Other)
+	if a.Intersection == b.Intersection {
+		return a.Distance < b.Distance
 	}
-	return a.ti < b.ti
+	return a.Intersection < b.Intersection
 }

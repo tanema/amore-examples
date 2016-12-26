@@ -1,7 +1,7 @@
 package game
 
 import (
-	"github.com/tanema/amore-examples/platformer/lib/bump"
+	"github.com/tanema/amore-examples/platformer/ump"
 	"github.com/tanema/amore/gfx"
 	"github.com/tanema/amore/keyboard"
 )
@@ -9,7 +9,7 @@ import (
 type Player struct {
 	x, y, width, height float32
 	color               *gfx.Color
-	body                *bump.Body
+	body                *ump.Body
 }
 
 func NewPlayer(x, y, width, height float32, color *gfx.Color) *Player {
@@ -20,11 +20,8 @@ func NewPlayer(x, y, width, height float32, color *gfx.Color) *Player {
 		height: height,
 		color:  color,
 	}
-	newPlayer.body = world.Add(newPlayer, "player", x, y, width, height, map[string]string{})
+	newPlayer.body = world.Add("player", x, y, width, height)
 	return newPlayer
-}
-
-func (player *Player) Send(event string, args ...interface{}) {
 }
 
 func (player *Player) Update(dt float32) {
@@ -40,7 +37,7 @@ func (player *Player) Update(dt float32) {
 	if keyboard.IsDown(keyboard.KeyRight) {
 		player.x += 1
 	}
-	player.x, player.y, _ = world.Move(player, player.x, player.y)
+	player.x, player.y, _ = player.body.Move(player.x, player.y)
 	camera.LookAt(player.x, player.y)
 }
 

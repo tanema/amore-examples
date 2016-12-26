@@ -1,11 +1,14 @@
 package game
 
 import (
+	"fmt"
+
 	"github.com/tanema/amore"
 	"github.com/tanema/amore/gfx"
 	"github.com/tanema/amore/keyboard"
 
-	"github.com/tanema/amore-examples/platformer/lib/bump"
+	"github.com/tanema/amore-examples/platformer/lense"
+	"github.com/tanema/amore-examples/platformer/ump"
 )
 
 const (
@@ -15,16 +18,17 @@ const (
 var (
 	width  float32 = 4000
 	height float32 = 2000
-	camera         = NewCamera()
-	scale          = float32(1)
-	rot            = float32(0)
-	world          = bump.NewWorld(64)
+	camera *lense.Camera
+	scale  = float32(1)
+	rot    = float32(0)
+	world  = ump.NewWorld(64)
 
 	blocks = []*Block{}
 	player *Player
 )
 
 func New() {
+	camera = lense.New()
 	player = NewPlayer(200, 200, 50, 50, gfx.NewColor(255, 0, 0, 255))
 	for i := 0; i <= 10; i++ {
 		blocks = append(blocks, NewBlock(
@@ -39,6 +43,7 @@ func Update(dt float32) {
 		amore.Quit()
 	}
 	if keyboard.IsDown(keyboard.KeyE) {
+		println("shake")
 		camera.Shake(1)
 	}
 	if keyboard.IsDown(keyboard.KeyW) {
@@ -54,19 +59,27 @@ func Update(dt float32) {
 		rot -= 0.01
 	}
 
-	l, t, w, h := camera.GetVisible()
-	for _, item := range world.QueryRect(l-updateRadius, t-updateRadius, w+updateRadius*2, h+updateRadius*2) {
-		item.Entity.Update(dt)
-	}
+	//l, t, w, h := camera.GetVisible()
+	//for _, item := range world.QueryRect(l-updateRadius, t-updateRadius, w+updateRadius*2, h+updateRadius*2) {
+	//item.Entity.Update(dt)
+	//}
+	player.Update(dt)
+	fmt.Println(scale)
 	camera.ZoomTo(scale)
 	camera.RotateTo(rot)
 	camera.Update(dt)
 }
 
 func Draw() {
-	world.DrawDebug(0, 0, 800, 600)
-	for _, item := range world.QueryRect(0, 0, 800, 600) {
-		item.Entity.Draw()
-		item.DrawDebug()
-	}
+	camera.Draw(func(l, t, w, h float32) {
+		world.DrawDebug(0, 0, 800, 600)
+		for _, block := range blocks {
+			block.Draw()
+		}
+		player.Draw()
+	})
+	//for _, item := range world.QueryRect(0, 0, 800, 600) {
+	//item.Entity.Draw()
+	//item.DrawDebug()
+	//}
 }

@@ -1,14 +1,14 @@
 package game
 
 import (
-	"github.com/tanema/amore-examples/platformer/lib/bump"
+	"github.com/tanema/amore-examples/platformer/ump"
 	"github.com/tanema/amore/gfx"
 )
 
 type Block struct {
 	x, y, width, height float32
 	color               *gfx.Color
-	body                *bump.Body
+	body                *ump.Body
 }
 
 func NewBlock(x, y, width, height float32, color *gfx.Color) *Block {
@@ -19,11 +19,9 @@ func NewBlock(x, y, width, height float32, color *gfx.Color) *Block {
 		height: height,
 		color:  color,
 	}
-	newBlock.body = world.Add(newBlock, "block", x, y, width, height, map[string]string{})
+	newBlock.body = world.Add("block", x, y, width, height)
+	newBlock.x, newBlock.y = newBlock.body.Position()
 	return newBlock
-}
-
-func (block *Block) Send(event string, args ...interface{}) {
 }
 
 func (block *Block) Update(dt float32) {

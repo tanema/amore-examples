@@ -1,4 +1,4 @@
-package game
+package lense
 
 import (
 	"github.com/tanema/amore/gfx"
@@ -19,7 +19,7 @@ type Camera struct {
 	shakeIntensity float32
 }
 
-func NewCamera() *Camera {
+func New() *Camera {
 	w, h := gfx.GetWidth(), gfx.GetHeight()
 
 	return &Camera{
