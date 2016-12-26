@@ -49,7 +49,6 @@ func Update(dt float32) {
 		amore.Quit()
 	}
 	if keyboard.IsDown(keyboard.KeyE) {
-		println("shake")
 		camera.Shake(1)
 	}
 	if keyboard.IsDown(keyboard.KeyW) {

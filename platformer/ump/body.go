@@ -1,6 +1,8 @@
 package ump
 
 import (
+	"sync/atomic"
+
 	"github.com/tanema/amore/gfx"
 )
 
@@ -16,9 +18,27 @@ type (
 		w       float32
 		h       float32
 		cells   []*Cell
-		respMap map[string]string // TODO: Add api for response map
+		static  bool
+		respMap map[string]string
 	}
 )
+
+func newBody(world *World, tag string, x, y, w, h float32) *Body {
+	id := atomic.AddUint32(&curBodyId, 1)
+	body := &Body{
+		ID:    id,
+		world: world,
+		tag:   tag,
+		w:     w,
+		h:     h,
+		cells: []*Cell{},
+		respMap: map[string]string{
+			"default": defaultFilter,
+		},
+	}
+	body.update(x, y, w, h)
+	return body
+}
 
 func (body *Body) Move(x, y float32) (gx, gy float32, cols []*Collision) {
 	actualX, actualY, collisions := body.check(x, y)
@@ -47,22 +67,24 @@ func (body *Body) check(goalX, goalY float32) (gx, gy float32, cols []*Collision
 }
 
 func (body *Body) update(x, y, w, h float32) {
-	if body.x != x || body.y != y || body.w != w || body.h != h {
-		for _, cell := range body.cells {
-			cell.leave(body)
-		}
-		body.cells = []*Cell{}
-		cl, ct, cw, ch := body.world.gridToCellRect(x, y, w, h)
-		for cy := ct; cy <= ct+ch-1; cy++ {
-			for cx := cl; cx <= cl+cw-1; cx++ {
-				body.cells = append(body.cells, body.world.addToCell(body, cx, cy))
-			}
-		}
-		body.x, body.y, body.w, body.h = x, y, w, h
+	if body.static || (body.x == x && body.y == y && body.w == w && body.h == h) {
+		return
 	}
+
+	for _, cell := range body.cells {
+		cell.leave(body)
+	}
+	body.cells = []*Cell{}
+	cl, ct, cw, ch := body.world.gridToCellRect(x, y, w, h)
+	for cy := ct; cy <= ct+ch-1; cy++ {
+		for cx := cl; cx <= cl+cw-1; cx++ {
+			body.cells = append(body.cells, body.world.addToCell(body, cx, cy))
+		}
+	}
+	body.x, body.y, body.w, body.h = x, y, w, h
 }
 
-func (body *Body) remove() {
+func (body *Body) Remove() {
 	for _, cell := range body.cells {
 		cell.leave(body)
 	}
@@ -75,14 +97,9 @@ func (body *Body) collide(other *Body, goalX, goalY float32) *Collision {
 
 	dx, dy := goalX-body.x, goalY-body.y
 	diff := body.getDiff(other)
-	respType, ok := body.respMap[other.tag]
-	if !ok {
-		respType = defaultFilter
-	}
-
 	collision := &Collision{
 		Body:     other,
-		RespType: respType,
+		RespType: body.GetResponse(other.tag),
 		Distance: body.distanceTo(other),
 		Move:     Point{X: dx, Y: dy},
 	}
@@ -201,6 +218,37 @@ func (body *Body) Position() (x, y float32) {
 
 func (body *Body) Extents() (x, y, w, h, r, b float32) {
 	return body.x, body.y, body.w, body.h, body.x + body.w, body.y + body.h
+}
+
+func (body *Body) IsStatic() bool {
+	return body.static
+}
+
+func (body *Body) SetStatic(isStatic bool) {
+	body.static = isStatic
+}
+
+func (body *Body) GetResponses() map[string]string {
+	return body.respMap
+}
+
+func (body *Body) SetResponses(respMap map[string]string) {
+	body.respMap = respMap
+}
+
+func (body *Body) GetResponse(tag string) string {
+	respType, ok := body.respMap[tag]
+	if !ok {
+		respType, ok = body.respMap["default"]
+		if !ok {
+			respType = defaultFilter
+		}
+	}
+	return respType
+}
+
+func (body *Body) SetResponse(tag, resp string) {
+	body.respMap[tag] = resp
 }
 
 func crossProduct(x1, y1, x2, y2 float32) float32 {
