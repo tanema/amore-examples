@@ -3,7 +3,12 @@ package game
 import (
 	"math"
 	"math/rand"
+	"time"
 )
+
+func init() {
+	rand.Seed(time.Now().UTC().UnixNano())
+}
 
 func clamp(x, minX, maxX float32) float32 {
 	if x < minX {

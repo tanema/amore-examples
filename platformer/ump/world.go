@@ -3,6 +3,7 @@ package ump
 import (
 	"math"
 	"sort"
+	"sync/atomic"
 )
 
 const defaultFilter = "slide"
@@ -34,7 +35,9 @@ func NewWorld(cellSize int) *World {
 }
 
 func (world *World) Add(tag string, left, top, w, h float32) *Body {
+	id := atomic.AddUint32(&curBodyId, 1)
 	body := &Body{
+		ID:      id,
 		world:   world,
 		tag:     tag,
 		w:       w,

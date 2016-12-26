@@ -4,8 +4,11 @@ import (
 	"github.com/tanema/amore/gfx"
 )
 
+var curBodyId uint32 = 0
+
 type (
 	Body struct {
+		ID      uint32
 		world   *World
 		tag     string
 		x       float32
@@ -94,19 +97,16 @@ func (body *Body) collide(other *Body, goalX, goalY float32) *Collision {
 			px = 0
 		}
 		collision.Normal = Point{X: sign(px), Y: sign(py)}
-		collision.Touch = Point{
-			X: body.x + px + (collision.Normal.X * delta),
-			Y: body.y + py + (collision.Normal.Y * delta),
-		}
 	} else {
 		collision.Intersection, collision.Normal.X, collision.Normal.Y = diff.getRayIntersectionFraction(0, 0, dx, dy)
 		if collision.Intersection == inf { //no intersection, no collision
 			return nil
 		}
-		collision.Touch = Point{
-			X: body.x + dx*collision.Intersection + (collision.Normal.X * delta),
-			Y: body.y + dy*collision.Intersection + (collision.Normal.Y * delta),
-		}
+	}
+
+	collision.Touch = Point{
+		X: body.x + dx*collision.Intersection + collision.Normal.X*0.0001,
+		Y: body.y + dy*collision.Intersection + collision.Normal.Y*0.0001,
 	}
 
 	return collision
