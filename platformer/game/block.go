@@ -1,34 +1,43 @@
 package game
 
-import (
-	"github.com/tanema/amore-examples/platformer/ump"
-	"github.com/tanema/amore/gfx"
-)
-
 type Block struct {
-	x, y, width, height float32
-	color               *gfx.Color
-	body                *ump.Body
+	*Entity
+	indestructible bool
 }
 
-func NewBlock(x, y, width, height float32, color *gfx.Color) *Block {
-	newBlock := &Block{
-		x:      x,
-		y:      y,
-		width:  width,
-		height: height,
-		color:  color,
+func newBlock(gameMap *Map, l, t, w, h float32, indestructible bool) *Block {
+	block := &Block{indestructible: indestructible}
+	block.Entity = newEntity(gameMap, block, "block", l, t, w, h)
+	block.body.SetStatic(true)
+	return block
+}
+
+func (block *Block) getColor() (r, g, b float32) {
+	if block.indestructible {
+		return 150, 150, 220
 	}
-	newBlock.body = world.Add("block", x, y, width, height)
-	newBlock.x, newBlock.y = newBlock.body.Position()
-	return newBlock
+	return 220, 150, 150
 }
 
 func (block *Block) Update(dt float32) {
-	block.x, block.y = block.body.Position()
 }
 
 func (block *Block) Draw() {
-	gfx.SetColorC(block.color)
-	gfx.Rect(gfx.FILL, block.x, block.y, block.width, block.height)
+	r, g, b := block.getColor()
+	l, t, w, h := block.Extents()
+	drawFilledRectangle(l, t, w, h, r, g, b)
+}
+
+func (block *Block) destroy() {
+	block.Entity.destroy()
+	//local area = self.w * self.h
+	//local debrisNumber = math.floor(math.max(30, area / 100))
+
+	//for i=1, debrisNumber do
+	//Debris:new(self.world,
+	//math.random(self.l, self.l + self.w),
+	//math.random(self.t, self.t + self.h),
+	//220, 150, 150
+	//)
+	//end
 }

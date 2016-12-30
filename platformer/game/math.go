@@ -10,6 +10,10 @@ func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
+func floor(x float32) float32 {
+	return float32(math.Floor(float64(x)))
+}
+
 func clamp(x, minX, maxX float32) float32 {
 	if x < minX {
 		return minX

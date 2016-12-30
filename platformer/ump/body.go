@@ -2,8 +2,6 @@ package ump
 
 import (
 	"sync/atomic"
-
-	"github.com/tanema/amore/gfx"
 )
 
 var curBodyId uint32 = 0
@@ -29,6 +27,8 @@ func newBody(world *World, tag string, x, y, w, h float32) *Body {
 		ID:    id,
 		world: world,
 		tag:   tag,
+		x:     x,
+		y:     y,
 		w:     w,
 		h:     h,
 		cells: []*Cell{},
@@ -36,13 +36,13 @@ func newBody(world *World, tag string, x, y, w, h float32) *Body {
 			"default": defaultFilter,
 		},
 	}
-	body.update(x, y, w, h)
+	body.world.grid.update(body)
 	return body
 }
 
 func (body *Body) Move(x, y float32) (gx, gy float32, cols []*Collision) {
 	actualX, actualY, collisions := body.check(x, y)
-	body.update(actualX, actualY, body.w, body.h)
+	body.update(actualX, actualY)
 	return actualX, actualY, collisions
 }
 
@@ -66,22 +66,12 @@ func (body *Body) check(goalX, goalY float32) (gx, gy float32, cols []*Collision
 	return goalX, goalY, collisions
 }
 
-func (body *Body) update(x, y, w, h float32) {
-	if body.static || (body.x == x && body.y == y && body.w == w && body.h == h) {
+func (body *Body) update(x, y float32) {
+	if body.static || (body.x == x && body.y == y) {
 		return
 	}
-
-	for _, cell := range body.cells {
-		cell.leave(body)
-	}
-	body.cells = []*Cell{}
-	cl, ct, cw, ch := body.world.gridToCellRect(x, y, w, h)
-	for cy := ct; cy <= ct+ch-1; cy++ {
-		for cx := cl; cx <= cl+cw-1; cx++ {
-			body.cells = append(body.cells, body.world.addToCell(body, cx, cy))
-		}
-	}
-	body.x, body.y, body.w, body.h = x, y, w, h
+	body.x, body.y = x, y
+	body.world.grid.update(body)
 }
 
 func (body *Body) Remove() {
@@ -122,8 +112,8 @@ func (body *Body) collide(other *Body, goalX, goalY float32) *Collision {
 	}
 
 	collision.Touch = Point{
-		X: body.x + dx*collision.Intersection + collision.Normal.X*0.0001,
-		Y: body.y + dy*collision.Intersection + collision.Normal.Y*0.0001,
+		X: body.x + dx*collision.Intersection + collision.Normal.X*0.01,
+		Y: body.y + dy*collision.Intersection + collision.Normal.Y*0.01,
 	}
 
 	return collision
@@ -205,13 +195,6 @@ func (body *Body) distanceTo(other *Body) float32 {
 	return dx*dx + dy*dy
 }
 
-func (body *Body) DrawDebug() {
-	gfx.SetColor(255, 0, 0, 100)
-	gfx.Rect(gfx.FILL, body.x, body.y, body.w, body.h)
-	gfx.SetColor(0, 255, 0, 100)
-	gfx.Rect(gfx.LINE, body.x-1, body.y-1, body.w+2, body.h+2)
-}
-
 func (body *Body) Position() (x, y float32) {
 	return body.x, body.y
 }
@@ -234,6 +217,10 @@ func (body *Body) GetResponses() map[string]string {
 
 func (body *Body) SetResponses(respMap map[string]string) {
 	body.respMap = respMap
+}
+
+func (body *Body) GetCells() []*Cell {
+	return body.cells
 }
 
 func (body *Body) GetResponse(tag string) string {
