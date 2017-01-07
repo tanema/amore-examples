@@ -6,6 +6,7 @@ type Cell struct {
 
 func (cell *Cell) enter(body *Body) {
 	cell.bodies[body.ID] = body
+	body.cells = append(body.cells, cell)
 }
 
 func (cell *Cell) leave(body *Body) {

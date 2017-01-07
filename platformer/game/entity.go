@@ -29,10 +29,6 @@ func newEntity(gameMap *Map, object gameObject, tag string, l, t, w, h float32) 
 	return entity
 }
 
-func (entity *Entity) GetTag() string {
-	return entity.tag
-}
-
 func (entity *Entity) changeVelocityByGravity(dt float32) {
 	entity.vy += gravityAccel * dt
 }
@@ -48,7 +44,7 @@ func (entity *Entity) changeVelocityByCollisionNormal(nx, ny, bounciness float32
 }
 
 func (entity *Entity) GetCenter() (x, y float32) {
-	return entity.l, entity.t
+	return entity.l + (entity.w / 2), entity.t + (entity.h / 2)
 }
 
 func (entity *Entity) Extents() (l, t, w, h float32) {

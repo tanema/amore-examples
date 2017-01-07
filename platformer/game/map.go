@@ -7,7 +7,7 @@ import (
 
 type gameObject interface {
 	Update(dt float32)
-	GetTag() string
+	destroy()
 	Draw()
 }
 
@@ -68,14 +68,11 @@ func (m *Map) Reset() {
 		}
 	}
 
-	//for i=1,10 do
-	//Guardian:new( self.world,
-	//self.player,
-	//self.camera,
-	//random(100, width-200),
-	//random(100, height-150) )
-	//end
-
+	for i := 0; i < 10; i++ {
+		newGuardian(m,
+			randRange(100, m.width-200),
+			randRange(100, m.height-150))
+	}
 }
 
 func (m *Map) ToggleDebug() {

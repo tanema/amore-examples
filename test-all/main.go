@@ -142,11 +142,13 @@ func draw() {
 		gfx.SetShader(nil)
 	}
 
-	gfx.Point(200, 20)
+	gfx.SetColor(255, 255, 255, 255)
+	gfx.SetPointSize(5)
+	gfx.Points(200, 20)
+	gfx.Circle(gfx.FILL, 230, 20, 20)
 
 	gfx.SetLineWidth(1)
 	//text
-	gfx.SetColor(255, 255, 255, 255)
 	gfx.Draw(text, 0, 300)
 	gfx.Rect(gfx.LINE, 0, 300, 500, text.GetHeight())
 

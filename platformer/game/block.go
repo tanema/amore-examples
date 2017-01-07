@@ -27,17 +27,3 @@ func (block *Block) Draw() {
 	l, t, w, h := block.Extents()
 	drawFilledRectangle(l, t, w, h, r, g, b)
 }
-
-func (block *Block) destroy() {
-	block.Entity.destroy()
-	//local area = self.w * self.h
-	//local debrisNumber = math.floor(math.max(30, area / 100))
-
-	//for i=1, debrisNumber do
-	//Debris:new(self.world,
-	//math.random(self.l, self.l + self.w),
-	//math.random(self.t, self.t + self.h),
-	//220, 150, 150
-	//)
-	//end
-}

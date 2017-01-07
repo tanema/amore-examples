@@ -52,8 +52,10 @@ func (world *World) QueryPoint(x, y float32) []*Body {
 func (world *World) QuerySegment(x1, y1, x2, y2 float32) []*Body {
 	bodies := []*Body{}
 	visited := map[*Body]bool{}
-	for _, body := range world.getBodiesInCells(world.grid.getCellsTouchedBySegment(x1, y1, x2, y2)) {
-		if _, ok := visited[body]; ok {
+	cells := world.grid.getCellsTouchedBySegment(x1, y1, x2, y2)
+	bodiesOnSegment := world.getBodiesInCells(cells)
+	for _, body := range bodiesOnSegment {
+		if _, ok := visited[body]; !ok {
 			visited[body] = true
 			fraction, _, _ := body.getRayIntersectionFraction(x1, y1, x2, y2)
 			if fraction != inf {
