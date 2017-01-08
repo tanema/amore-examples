@@ -27,3 +27,9 @@ func (block *Block) Draw(debug bool) {
 	l, t, w, h := block.Extents()
 	drawFilledRectangle(l, t, w, h, r, g, b)
 }
+
+func (block *Block) damage(intensity float32) {
+	if !block.indestructible {
+		block.Entity.damage(intensity)
+	}
+}

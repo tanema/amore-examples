@@ -132,4 +132,10 @@ func (guardian *Guardian) Draw(debug bool) {
 }
 
 func (guardian *Guardian) fire() {
+	cx, cy := guardian.GetCenter()
+	tx, ty := guardian.gameMap.Player.GetCenter()
+	vx, vy := (tx-cx)*3, (ty-cy)*3
+	newGrenade(guardian, cx, cy, vx, vy)
+	guardian.fireTimer = 0
+	guardian.aimTimer = 0
 }

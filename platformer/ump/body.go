@@ -237,3 +237,7 @@ func (body *Body) GetResponse(tag string) string {
 func (body *Body) SetResponse(tag, resp string) {
 	body.respMap[tag] = resp
 }
+
+func (body *Body) Tag() string {
+	return body.tag
+}

@@ -6,10 +6,12 @@ import (
 
 type Player struct {
 	*Entity
-	health            float32
-	isJumpingOrFlying bool
-	isDead            bool
-	onGround          bool
+	health             float32
+	deadCounter        float32
+	isJumpingOrFlying  bool
+	isDead             bool
+	onGround           bool
+	achievedFullHealth bool
 }
 
 const (
@@ -76,7 +78,21 @@ func (player *Player) moveColliding(dt float32) {
 	player.l, player.t = l, t
 }
 
+func (player *Player) updateHealth(dt float32) {
+	player.achievedFullHealth = false
+	if player.isDead {
+		player.deadCounter = player.deadCounter + dt
+		if player.deadCounter >= deadDuration {
+			player.gameMap.Reset()
+		}
+	} else if player.health < 1 {
+		player.health = min(1, player.health+dt/6)
+		player.achievedFullHealth = player.health == 1
+	}
+}
+
 func (player *Player) Update(dt float32) {
+	player.updateHealth(dt)
 	player.changeVelocityByKeys(dt)
 	player.changeVelocityByGravity(dt)
 	player.moveColliding(dt)
@@ -102,5 +118,26 @@ func (player *Player) Draw(debug bool) {
 
 	if debug && player.onGround {
 		drawFilledRectangle(l, t+h-4, w, 4, 255, 255, 255)
+	}
+}
+
+func (player *Player) damage(intensity float32) {
+	if player.isDead {
+		return
+	}
+
+	if player.health == 1 {
+		for i := 1; i <= 3; i++ {
+			newDebris(player.gameMap,
+				randRange(player.l, player.l+player.w),
+				player.t+player.h/2,
+			)
+		}
+	}
+
+	player.health = player.health - intensity
+	if player.health <= 0 {
+		player.destroy()
+		player.isDead = true
 	}
 }
