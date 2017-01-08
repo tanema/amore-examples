@@ -8,7 +8,7 @@ import (
 type gameObject interface {
 	Update(dt float32)
 	destroy()
-	Draw()
+	Draw(bool)
 }
 
 type Map struct {
@@ -87,7 +87,10 @@ func (m *Map) Update(dt, l, t, w, h float32) {
 }
 
 func (m *Map) Draw(l, t, w, h float32) {
+	if m.debug {
+		m.world.DrawDebug(l, t, w, h)
+	}
 	for _, item := range m.world.QueryRect(l, t, w, h) {
-		m.objects[item.ID].Draw()
+		m.objects[item.ID].Draw(m.debug)
 	}
 }

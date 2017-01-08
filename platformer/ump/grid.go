@@ -81,9 +81,6 @@ func (grid *Grid) getCellsTouchedBySegment(x1, y1, x2, y2 float32) []*Cell {
 	visited := map[*Cell]bool{}
 
 	grid.traceRay(x1, y1, x2, y2, func(cx, cy int) {
-		if cx > 100 || cy > 100 {
-			panic("it broke")
-		}
 		cell := grid.cellAt(float32(cx), float32(cy), true)
 		if _, found := visited[cell]; found {
 			return
@@ -99,22 +96,23 @@ func (grid *Grid) getCellsTouchedBySegment(x1, y1, x2, y2 float32) []*Cell {
 // by John Amanides and Andrew Woo - http://www.cse.yorku.ca/~amana/research/grid.pdf
 // It has been modified to include both cells when the ray "touches a grid corner",
 // and with a different exit condition
-func (grid *Grid) rayStep(ct, t1, t2 float32) int {
+func (grid *Grid) rayStep(ct, t1, t2 float32) (int, float32, float32) {
 	v := t2 - t1
+	delta := grid.cellSize / v
 	if v > 0 {
-		return 1
+		return 1, delta, delta * (1.0 - frac(t1/grid.cellSize))
 	} else if v < 0 {
-		return -1
+		return -1, -delta, -delta * frac(t1/grid.cellSize)
 	} else {
-		return 0
+		return 0, inf, inf
 	}
 }
 
 func (grid *Grid) traceRay(x1, y1, x2, y2 float32, f func(cx, cy int)) {
 	cx1, cy1 := grid.cellCoordsAt(x1, y1)
 	cx2, cy2 := grid.cellCoordsAt(x2, y2)
-	stepX := grid.rayStep(float32(cx1), x1, x2)
-	stepY := grid.rayStep(float32(cy1), y1, y2)
+	stepX, dx, tx := grid.rayStep(float32(cx1), x1, x2)
+	stepY, dy, ty := grid.rayStep(float32(cy1), y1, y2)
 	cx, cy := cx1, cy1
 
 	f(cx, cy)
@@ -122,21 +120,19 @@ func (grid *Grid) traceRay(x1, y1, x2, y2 float32, f func(cx, cy int)) {
 	// The default implementation had an infinite loop problem when
 	// approaching the last cell in some occassions. We finish iterating
 	// when we are *next* to the last cell
-	xdiff, ydiff := abs(float32(cx-cx2)), abs(float32(cy-cy2))
-	for xdiff+ydiff > 1 {
-		if xdiff > ydiff {
+	for abs(float32(cx-cx2))+abs(float32(cy-cy2)) > 1 {
+		if tx < ty {
+			tx += dx
 			cx += stepX
-			f(cx, cy)
 		} else {
 			// Addition: include both cells when going through corners
-			if xdiff == ydiff {
+			if tx == ty {
 				f(cx+stepX, cy)
 			}
+			ty += dy
 			cy += stepY
-			f(cx, cy)
 		}
-
-		xdiff, ydiff = abs(float32(cx-cx2)), abs(float32(cy-cy2))
+		f(cx, cy)
 	}
 
 	// If we have not arrived to the last cell, use it

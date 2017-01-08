@@ -3,6 +3,8 @@ package ump
 import (
 	"math"
 	"sort"
+
+	"github.com/tanema/amore/gfx"
 )
 
 const defaultFilter = "slide"
@@ -57,7 +59,7 @@ func (world *World) QuerySegment(x1, y1, x2, y2 float32) []*Body {
 	for _, body := range bodiesOnSegment {
 		if _, ok := visited[body]; !ok {
 			visited[body] = true
-			fraction, _, _ := body.getRayIntersectionFraction(x1, y1, x2, y2)
+			fraction, _, _ := body.getRayIntersectionFraction(x1, y1, x2-x1, y2-y1)
 			if fraction != inf {
 				bodies = append(bodies, body)
 			}
@@ -106,4 +108,25 @@ func (world *World) Project(body *Body, goalX, goalY float32) []*Collision {
 
 func (world *World) AddResponse(name string, response Resp) {
 	world.responses[name] = response
+}
+
+func (world *World) DrawDebug(l, t, w, h float32) {
+	cellSize := world.grid.cellSize
+	cl, ct, cw, ch := world.grid.toCellRect(l, t, w, h)
+	for cy := ct; cy <= ct+ch-1; cy++ {
+		row, ok := world.grid.rows[cy]
+		if ok {
+			for cx := cl; cx <= cl+cw-1; cx++ {
+				cell, ok := row[cx]
+				if ok {
+					l, t, w, h := float32(cx)*cellSize, float32(cy)*cellSize, cellSize, cellSize
+					intensity := cell.itemCount*12 + 16
+					gfx.SetColor(255, 255, 255, float32(intensity))
+					gfx.Rect(gfx.FILL, l, t, w, h)
+					gfx.SetColor(255, 255, 255, 10)
+					gfx.Rect(gfx.LINE, l, t, w, h)
+				}
+			}
+		}
+	}
 }

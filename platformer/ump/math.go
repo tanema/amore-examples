@@ -50,3 +50,28 @@ func sin(x float32) float32 {
 func cos(x float32) float32 {
 	return float32(math.Cos(float64(x)))
 }
+
+func sign(x float32) float32 {
+	if x > 0 {
+		return 1
+	}
+	if x == 0 {
+		return 0
+	}
+	return -1
+}
+
+func crossProduct(x1, y1, x2, y2 float32) float32 {
+	return x1*y2 - y1*x2
+}
+
+func nearest(x, a, b float32) float32 {
+	if abs(a-x) < abs(b-x) {
+		return a
+	}
+	return b
+}
+
+func frac(n float32) float32 {
+	return abs(n - float32(math.Floor(float64(n))))
+}

@@ -237,24 +237,3 @@ func (body *Body) GetResponse(tag string) string {
 func (body *Body) SetResponse(tag, resp string) {
 	body.respMap[tag] = resp
 }
-
-func crossProduct(x1, y1, x2, y2 float32) float32 {
-	return x1*y2 - y1*x2
-}
-
-func nearest(x, a, b float32) float32 {
-	if abs(a-x) < abs(b-x) {
-		return a
-	}
-	return b
-}
-
-func sign(x float32) float32 {
-	if x > 0 {
-		return 1
-	}
-	if x == 0 {
-		return 0
-	}
-	return -1
-}

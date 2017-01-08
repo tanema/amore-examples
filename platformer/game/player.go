@@ -91,12 +91,16 @@ func (player *Player) canFly() bool {
 	return player.health == 1
 }
 
-func (player *Player) Draw() {
+func (player *Player) Draw(debug bool) {
 	r, g, b := player.getColor()
 	l, t, w, h := player.Extents()
 	drawFilledRectangle(l, t, w, h, r, g, b)
 
 	if player.canFly() {
 		drawFilledRectangle(l-beltWidth, t+h/2, w+2*beltWidth, beltHeight, 255, 255, 255)
+	}
+
+	if debug && player.onGround {
+		drawFilledRectangle(l, t+h-4, w, 4, 255, 255, 255)
 	}
 }
