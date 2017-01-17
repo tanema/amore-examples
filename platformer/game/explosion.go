@@ -6,12 +6,6 @@ var (
 	explosionMaxPushSpeed float32 = 300
 )
 
-func damageItem(object gameObject) {
-}
-
-func pushItem(object gameObject) {
-}
-
 func newExplosion(grenade *Grenade) {
 	x, y := grenade.GetCenter()
 	l, t, w, h := x-explosionWidth/2, y-explosionHeight/2, explosionWidth, explosionHeight
@@ -31,12 +25,16 @@ func newExplosion(grenade *Grenade) {
 	for _, item := range world.QueryRect(l-radius, t-radius, w+radius+radius, h+radius+radius) {
 		object := gameMap.Get(item)
 		tag := object.tag()
-		if tag == "player" || tag == "grenade" {
+		if tag == "player" || tag == "grenade" || tag == "debris" || tag == "puff" {
 			object.push(300)
 		}
 	}
 
 	for i := float32(0); i < randRange(15, 30); i++ {
-		newPuff(randRange(l, l+w), randRange(t, t+h))
+		newPuff(
+			grenade.parent.gameMap,
+			randRange(l, l+w), randRange(t, t+h),
+			0, -10, 2, 10,
+		)
 	}
 }

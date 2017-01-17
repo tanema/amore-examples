@@ -53,7 +53,7 @@ func (entity *Entity) Extents() (l, t, w, h float32) {
 
 func (entity *Entity) destroy() {
 	entity.body.Remove()
-	//delete(entity.gameMap.objects, entity.body.ID)
+	delete(entity.gameMap.objects, entity.body.ID)
 }
 
 func (entity *Entity) tag() string {

@@ -42,7 +42,7 @@ func newBody(world *World, tag string, x, y, w, h float32) *Body {
 
 func (body *Body) Move(x, y float32) (gx, gy float32, cols []*Collision) {
 	actualX, actualY, collisions := body.check(x, y)
-	body.update(actualX, actualY)
+	body.Update(actualX, actualY)
 	return actualX, actualY, collisions
 }
 
@@ -66,7 +66,7 @@ func (body *Body) check(goalX, goalY float32) (gx, gy float32, cols []*Collision
 	return goalX, goalY, collisions
 }
 
-func (body *Body) update(x, y float32) {
+func (body *Body) Update(x, y float32) {
 	if body.static || (body.x == x && body.y == y) {
 		return
 	}

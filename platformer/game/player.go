@@ -28,6 +28,7 @@ func newPlayer(gameMap *Map, l, t float32) *Player {
 		health: 1,
 	}
 	player.Entity = newEntity(gameMap, player, "player", l, t, 32, 64)
+	player.body.SetResponse("puff", "cross")
 	return player
 }
 
@@ -72,8 +73,10 @@ func (player *Player) moveColliding(dt float32) {
 	player.onGround = false
 	l, t, cols := player.Entity.body.Move(player.l+player.vx*dt, player.t+player.vy*dt)
 	for _, col := range cols {
-		player.changeVelocityByCollisionNormal(col.Normal.X, col.Normal.Y, 0)
-		player.onGround = col.Normal.Y < 1
+		if col.Body.Tag() != "puff" {
+			player.changeVelocityByCollisionNormal(col.Normal.X, col.Normal.Y, 0)
+			player.onGround = col.Normal.Y < 1
+		}
 	}
 	player.l, player.t = l, t
 }
@@ -91,10 +94,19 @@ func (player *Player) updateHealth(dt float32) {
 	}
 }
 
+func (player *Player) playEffects() {
+	if player.isJumpingOrFlying {
+		l, t, w, h := player.Extents()
+		newPuff(player.gameMap, l, t+h/2, 20*(1-randMax(1)), 50, 2, 3)
+		newPuff(player.gameMap, l+w, t+h/2, 20*(1-randMax(1)), 50, 2, 3)
+	}
+}
+
 func (player *Player) Update(dt float32) {
 	player.updateHealth(dt)
 	player.changeVelocityByKeys(dt)
 	player.changeVelocityByGravity(dt)
+	player.playEffects()
 	player.moveColliding(dt)
 }
 
@@ -131,6 +143,7 @@ func (player *Player) damage(intensity float32) {
 			newDebris(player.gameMap,
 				randRange(player.l, player.l+player.w),
 				player.t+player.h/2,
+				255, 0, 0,
 			)
 		}
 	}
@@ -139,5 +152,15 @@ func (player *Player) damage(intensity float32) {
 	if player.health <= 0 {
 		player.destroy()
 		player.isDead = true
+	}
+}
+
+func (player *Player) destroy() {
+	player.body.Remove()
+	for i := 1; i <= 20; i++ {
+		newDebris(player.gameMap,
+			randRange(player.l, player.l+player.w),
+			randRange(player.t, player.t+player.h),
+			255, 0, 0)
 	}
 }

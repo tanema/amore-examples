@@ -31,5 +31,15 @@ func (block *Block) Draw(debug bool) {
 func (block *Block) damage(intensity float32) {
 	if !block.indestructible {
 		block.Entity.damage(intensity)
+		area := block.w * block.h
+		debrisNumber := floor(max(30, area/100))
+
+		for i := float32(1); i <= debrisNumber; i++ {
+			newDebris(block.gameMap,
+				randRange(block.l, block.l+block.w),
+				randRange(block.t, block.t+block.h),
+				220, 150, 150,
+			)
+		}
 	}
 }
