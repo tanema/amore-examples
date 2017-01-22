@@ -54,7 +54,6 @@ func (sprite *Sprite) Draw() {
 	if keyboard.IsDown(keyboard.KeyG) {
 		sprite.body.Draw()
 	}
-	gfx.SetLineWidth(2)
 	gfx.PolyLine(sprite.body.GetPoints())
 }
 

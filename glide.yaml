@@ -1,0 +1,16 @@
+package: github.com/tanema/amore-examples
+import:
+- package: github.com/neguse/go-box2d-lite
+  subpackages:
+  - box2dlite
+- package: github.com/tanema/amore
+  subpackages:
+  - audio
+  - file
+  - gfx
+  - joystick
+  - keyboard
+  - mouse
+  - timer
+  - touch
+  - window
