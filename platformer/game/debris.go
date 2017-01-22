@@ -22,9 +22,10 @@ func newDebris(gameMap *Map, x, y, r, g, b float32) *Debris {
 	)
 	debris.vx = randRange(-100, 100)
 	debris.vy = randRange(-100, 100)
-	debris.body.SetResponse("default", "cross")
-	debris.body.SetResponse("block", "bounce")
-	debris.body.SetResponse("guardian", "bounce")
+	debris.body.SetResponses(map[string]string{
+		"guardian": "bounce",
+		"block":    "bounce",
+	})
 	return debris
 }
 

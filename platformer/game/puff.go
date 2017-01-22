@@ -14,8 +14,6 @@ func newPuff(gameMap *Map, x, y, vx, vy, minSize, maxSize float32) *Puff {
 		randRange(minSize, maxSize),
 		randRange(minSize, maxSize),
 	)
-	puff.body.SetResponse("default", "cross")
-	puff.body.SetResponse("block", "slide")
 	puff.lifeTime = 0.1 + randMax(1)
 	puff.vx, puff.vy = vx, vy
 	return puff

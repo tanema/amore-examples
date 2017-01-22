@@ -23,8 +23,11 @@ func newGrenade(guardian *Guardian, x, y, vx, vy float32) *Grenade {
 	}
 	grenade.Entity = newEntity(guardian.gameMap, grenade, "grenade", x, y, 11, 11)
 	grenade.vx, grenade.vy = vx, vy
-	grenade.body.SetResponse("default", "bounce")
-	grenade.body.SetResponse("guardian", "cross")
+	grenade.body.SetResponses(map[string]string{
+		"guardian": "cross", //This gets toggled once the grenade is outside the guardian
+		"player":   "bounce",
+		"block":    "bounce",
+	})
 	return grenade
 }
 

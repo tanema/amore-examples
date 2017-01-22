@@ -85,7 +85,10 @@ func (m *Map) ToggleDebug() {
 func (m *Map) Update(dt, l, t, w, h float32) {
 	l, t, w, h = l-m.updateRadius, t-m.updateRadius, w+m.updateRadius*2, h+m.updateRadius*2
 	for _, item := range m.world.QueryRect(l, t, w, h) {
-		m.Get(item).Update(dt)
+		object, ok := m.objects[item.ID]
+		if ok {
+			object.Update(dt)
+		}
 	}
 }
 
@@ -94,7 +97,10 @@ func (m *Map) Draw(l, t, w, h float32) {
 		m.world.DrawDebug(l, t, w, h)
 	}
 	for _, item := range m.world.QueryRect(l, t, w, h) {
-		m.Get(item).Draw(m.debug)
+		object, ok := m.objects[item.ID]
+		if ok {
+			object.Draw(m.debug)
+		}
 	}
 }
 

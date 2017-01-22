@@ -28,7 +28,10 @@ func newPlayer(gameMap *Map, l, t float32) *Player {
 		health: 1,
 	}
 	player.Entity = newEntity(gameMap, player, "player", l, t, 32, 64)
-	player.body.SetResponse("puff", "cross")
+	player.body.SetResponses(map[string]string{
+		"guardian": "slide",
+		"block":    "slide",
+	})
 	return player
 }
 

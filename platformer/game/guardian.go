@@ -140,12 +140,13 @@ func (guardian *Guardian) fire() {
 	guardian.aimTimer = 0
 }
 
+func (guardian *Guardian) damage(intensity float32) {
+	guardian.destroy()
+}
+
 func (guardian *Guardian) destroy() {
 	guardian.body.Remove()
-	area := guardian.w * guardian.h
-	debrisNumber := floor(max(30, area/100))
-
-	for i := float32(1); i <= debrisNumber; i++ {
+	for i := 1; i <= 45; i++ {
 		newDebris(guardian.gameMap,
 			randRange(guardian.l, guardian.l+guardian.w),
 			randRange(guardian.t, guardian.t+guardian.h),

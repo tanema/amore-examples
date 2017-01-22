@@ -53,9 +53,10 @@ func (body *Body) check(goalX, goalY float32) (gx, gy float32, cols []*Collision
 
 	for len(projected_cols) > 0 {
 		collision := projected_cols[0]
-		if _, ok := visited[collision.Body]; !ok {
+		_, seen := visited[collision.Body]
+		response, hasResp := body.world.responses[collision.RespType]
+		if !seen && hasResp {
 			collisions = append(collisions, collision)
-			response := body.world.responses[collision.RespType]
 			goalX, goalY, projected_cols = response(body.world, collision, body, goalX, goalY)
 			visited[collision.Body] = true
 		} else {
@@ -226,10 +227,7 @@ func (body *Body) GetCells() []*Cell {
 func (body *Body) GetResponse(tag string) string {
 	respType, ok := body.respMap[tag]
 	if !ok {
-		respType, ok = body.respMap["default"]
-		if !ok {
-			respType = defaultFilter
-		}
+		respType, _ = body.respMap["default"]
 	}
 	return respType
 }

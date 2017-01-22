@@ -17,15 +17,9 @@ func slideFilter(world *World, col *Collision, body *Body, goalX, goalY float32)
 			sy = goalY
 		}
 	}
-
 	col.Data = Point{X: sx, Y: sy}
-
-	return sx, sy, world.Project(&Body{
-		x: col.Touch.X,
-		y: col.Touch.Y,
-		w: body.w,
-		h: body.h,
-	}, sx, sy)
+	body.x, body.y = col.Touch.X, col.Touch.Y
+	return sx, sy, world.Project(body, sx, sy)
 }
 
 func bounceFilter(world *World, col *Collision, body *Body, goalX, goalY float32) (float32, float32, []*Collision) {
