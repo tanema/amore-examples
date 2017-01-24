@@ -86,12 +86,7 @@ func (player *Player) moveColliding(dt float32) {
 
 func (player *Player) updateHealth(dt float32) {
 	player.achievedFullHealth = false
-	if player.isDead {
-		player.deadCounter = player.deadCounter + dt
-		if player.deadCounter >= deadDuration {
-			player.gameMap.Reset()
-		}
-	} else if player.health < 1 {
+	if player.health < 1 {
 		player.health = min(1, player.health+dt/6)
 		player.achievedFullHealth = player.health == 1
 	}
@@ -99,9 +94,11 @@ func (player *Player) updateHealth(dt float32) {
 
 func (player *Player) playEffects() {
 	if player.isJumpingOrFlying {
-		l, t, w, h := player.Extents()
-		newPuff(player.gameMap, l, t+h/2, 20*(1-randMax(1)), 50, 2, 3)
-		newPuff(player.gameMap, l+w, t+h/2, 20*(1-randMax(1)), 50, 2, 3)
+		if !player.onGround {
+			l, t, w, h := player.Extents()
+			newPuff(player.gameMap, l, t+h/2, 20*(1-randMax(1)), 50, 2, 3)
+			newPuff(player.gameMap, l+w, t+h/2, 20*(1-randMax(1)), 50, 2, 3)
+		}
 	}
 }
 

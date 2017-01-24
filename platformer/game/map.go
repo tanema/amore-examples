@@ -83,6 +83,13 @@ func (m *Map) ToggleDebug() {
 }
 
 func (m *Map) Update(dt, l, t, w, h float32) {
+	if m.Player.isDead {
+		m.Player.deadCounter = m.Player.deadCounter + dt
+		if m.Player.deadCounter >= deadDuration {
+			m.Reset()
+		}
+	}
+
 	l, t, w, h = l-m.updateRadius, t-m.updateRadius, w+m.updateRadius*2, h+m.updateRadius*2
 	for _, item := range m.world.QueryRect(l, t, w, h) {
 		object, ok := m.objects[item.ID]
