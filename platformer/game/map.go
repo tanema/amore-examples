@@ -6,12 +6,13 @@ import (
 )
 
 type gameObject interface {
-	Update(dt float32)
+	update(dt float32)
 	tag() string
 	destroy()
 	push(strength float32)
 	damage(intensity float32)
-	Draw(bool)
+	draw(bool)
+	updateOrder() int
 }
 
 type Map struct {

@@ -41,7 +41,7 @@ func newGuardian(gameMap *Map, l, t float32) *Guardian {
 	return guardian
 }
 
-func (guardian *Guardian) Update(dt float32) {
+func (guardian *Guardian) update(dt float32) {
 	guardian.isNearTarget = false
 	guardian.isLoading = false
 	guardian.laserX, guardian.laserY = 0, 0
@@ -81,7 +81,7 @@ func (guardian *Guardian) Update(dt float32) {
 	}
 }
 
-func (guardian *Guardian) Draw(debug bool) {
+func (guardian *Guardian) draw(debug bool) {
 	drawFilledRectangle(guardian.l, guardian.t, guardian.w, guardian.h, 255, 0, 255)
 
 	cx, cy := guardian.GetCenter()

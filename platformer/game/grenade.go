@@ -57,7 +57,7 @@ func (grenade *Grenade) detectExitedParent() {
 	}
 }
 
-func (grenade *Grenade) Update(dt float32) {
+func (grenade *Grenade) update(dt float32) {
 	grenade.lived += dt
 	if grenade.lived >= grenadeLifeTime {
 		grenade.destroy()
@@ -68,7 +68,7 @@ func (grenade *Grenade) Update(dt float32) {
 	}
 }
 
-func (grenade *Grenade) Draw(debug bool) {
+func (grenade *Grenade) draw(debug bool) {
 	r, g, b := float32(255), float32(0), float32(0)
 	gfx.SetColor(r, g, b, 255)
 

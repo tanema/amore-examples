@@ -19,10 +19,10 @@ func (block *Block) getColor() (r, g, b float32) {
 	return 220, 150, 150
 }
 
-func (block *Block) Update(dt float32) {
+func (block *Block) update(dt float32) {
 }
 
-func (block *Block) Draw(debug bool) {
+func (block *Block) draw(debug bool) {
 	r, g, b := block.getColor()
 	l, t, w, h := block.Extents()
 	drawFilledRectangle(l, t, w, h, r, g, b)

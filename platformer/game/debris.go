@@ -39,7 +39,7 @@ func (debris *Debris) moveColliding(dt float32) {
 	debris.l, debris.t = next_l, next_t
 }
 
-func (debris *Debris) Update(dt float32) {
+func (debris *Debris) update(dt float32) {
 	debris.lived = debris.lived + dt
 
 	if debris.lived >= debris.lifeTime {
@@ -50,7 +50,7 @@ func (debris *Debris) Update(dt float32) {
 	}
 }
 
-func (debris *Debris) Draw(debug bool) {
+func (debris *Debris) draw(debug bool) {
 	l, t, w, h := debris.Extents()
 	drawFilledRectangle(l, t, w, h, debris.r, debris.g, debris.b)
 }

@@ -32,7 +32,7 @@ func (puff *Puff) expand(dt float32) {
 	puff.t = cy - puff.h/2
 }
 
-func (puff *Puff) Update(dt float32) {
+func (puff *Puff) update(dt float32) {
 	puff.lived = puff.lived + dt
 
 	if puff.lived >= puff.lifeTime {
@@ -45,7 +45,7 @@ func (puff *Puff) Update(dt float32) {
 	}
 }
 
-func (puff *Puff) Draw(debug bool) {
+func (puff *Puff) draw(debug bool) {
 	percent := min(1, (puff.lived/puff.lifeTime)*1.8)
 	r, g, b := 255-floor(155*percent), 255-floor(155*percent), float32(100)
 	l, t, w, h := puff.Extents()

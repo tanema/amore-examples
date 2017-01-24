@@ -102,7 +102,7 @@ func (player *Player) playEffects() {
 	}
 }
 
-func (player *Player) Update(dt float32) {
+func (player *Player) update(dt float32) {
 	player.updateHealth(dt)
 	player.changeVelocityByKeys(dt)
 	player.changeVelocityByGravity(dt)
@@ -119,7 +119,7 @@ func (player *Player) canFly() bool {
 	return player.health == 1
 }
 
-func (player *Player) Draw(debug bool) {
+func (player *Player) draw(debug bool) {
 	r, g, b := player.getColor()
 	l, t, w, h := player.Extents()
 	drawFilledRectangle(l, t, w, h, r, g, b)
