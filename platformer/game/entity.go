@@ -29,6 +29,10 @@ func newEntity(gameMap *Map, object gameObject, tag string, l, t, w, h float32) 
 	return entity
 }
 
+func (entity *Entity) updateOrder() int {
+	return 10000
+}
+
 func (entity *Entity) changeVelocityByGravity(dt float32) {
 	entity.vy += gravityAccel * dt
 }

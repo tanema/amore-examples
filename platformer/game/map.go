@@ -5,16 +5,6 @@ import (
 	"github.com/tanema/amore-examples/platformer/ump"
 )
 
-type gameObject interface {
-	update(dt float32)
-	tag() string
-	destroy()
-	push(strength float32)
-	damage(intensity float32)
-	draw(bool)
-	updateOrder() int
-}
-
 type Map struct {
 	width        float32
 	height       float32
@@ -92,10 +82,12 @@ func (m *Map) Update(dt, l, t, w, h float32) {
 	}
 
 	l, t, w, h = l-m.updateRadius, t-m.updateRadius, w+m.updateRadius*2, h+m.updateRadius*2
-	for _, item := range m.world.QueryRect(l, t, w, h) {
+	visibleObject := m.world.QueryRect(l, t, w, h)
+
+	for _, item := range visibleObject {
 		object, ok := m.objects[item.ID]
 		if ok {
-			object.Update(dt)
+			object.update(dt)
 		}
 	}
 }
@@ -107,7 +99,7 @@ func (m *Map) Draw(l, t, w, h float32) {
 	for _, item := range m.world.QueryRect(l, t, w, h) {
 		object, ok := m.objects[item.ID]
 		if ok {
-			object.Draw(m.debug)
+			object.draw(m.debug)
 		}
 	}
 }

@@ -57,6 +57,10 @@ func (grenade *Grenade) detectExitedParent() {
 	}
 }
 
+func (grenade *Grenade) updateOrder() int {
+	return 2
+}
+
 func (grenade *Grenade) update(dt float32) {
 	grenade.lived += dt
 	if grenade.lived >= grenadeLifeTime {

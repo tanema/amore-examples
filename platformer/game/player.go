@@ -102,6 +102,10 @@ func (player *Player) playEffects() {
 	}
 }
 
+func (player *Player) updateOrder() int {
+	return 1
+}
+
 func (player *Player) update(dt float32) {
 	player.updateHealth(dt)
 	player.changeVelocityByKeys(dt)

@@ -81,6 +81,10 @@ func (guardian *Guardian) update(dt float32) {
 	}
 }
 
+func (guardian *Guardian) updateOrder() int {
+	return 3
+}
+
 func (guardian *Guardian) draw(debug bool) {
 	drawFilledRectangle(guardian.l, guardian.t, guardian.w, guardian.h, 255, 0, 255)
 
