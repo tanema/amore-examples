@@ -56,15 +56,22 @@ func (world *World) QuerySegment(x1, y1, x2, y2 float32, tags ...string) []*Body
 	visited := map[*Body]bool{}
 	cells := world.grid.getCellsTouchedBySegment(x1, y1, x2, y2)
 	bodiesOnSegment := world.getBodiesInCells(cells)
+	distances := map[uint32]float32{}
 	for _, body := range bodiesOnSegment {
 		if _, ok := visited[body]; !ok && body.HasTag(tags...) {
 			visited[body] = true
 			fraction, _, _ := body.getRayIntersectionFraction(x1, y1, x2-x1, y2-y1)
 			if fraction != inf {
 				bodies = append(bodies, body)
+				distances[body.ID] = fraction
 			}
 		}
 	}
+
+	By(func(b1, b2 *Body) bool {
+		return distances[b1.ID] < distances[b2.ID]
+	}).Sort(bodies)
+
 	return bodies
 }
 
