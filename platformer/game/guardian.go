@@ -30,7 +30,8 @@ func newGuardian(gameMap *Map, l, t float32) *Guardian {
 	}
 	guardian.Entity = newEntity(gameMap, guardian, "guardian", l, t, 42, 110)
 
-	others := gameMap.world.QueryRect(guardian.Extents())
+	l, t, w, h := guardian.Extents()
+	others := gameMap.world.QueryRect(l, t, w, h, "block")
 	for _, other := range others {
 		if other.ID != guardian.body.ID {
 			other.Remove()
@@ -57,7 +58,7 @@ func (guardian *Guardian) Update(dt float32) {
 
 		if distance2 <= guardian.activeRadius*guardian.activeRadius {
 			guardian.isNearTarget = true
-			bodies := guardian.gameMap.world.QuerySegment(cx, cy, tx, ty)
+			bodies := guardian.gameMap.world.QuerySegment(cx, cy, tx, ty, "player", "block", "guardian")
 			// ignore itemsInfo[0] because thats always guardian
 			if len(bodies) > 1 {
 				body := bodies[1]

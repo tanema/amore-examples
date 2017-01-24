@@ -239,3 +239,16 @@ func (body *Body) SetResponse(tag, resp string) {
 func (body *Body) Tag() string {
 	return body.tag
 }
+
+func (body *Body) HasTag(tags ...string) bool {
+	// This is so that when no tags are passed in, all tags are accepted
+	if tags == nil {
+		return true
+	}
+	for _, tag := range tags {
+		if body.tag == tag {
+			return true
+		}
+	}
+	return false
+}

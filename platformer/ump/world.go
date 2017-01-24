@@ -33,31 +33,31 @@ func (world *World) Add(tag string, left, top, w, h float32) *Body {
 	return newBody(world, tag, left, top, w, h)
 }
 
-func (world *World) QueryRect(x, y, w, h float32) []*Body {
-	return world.getBodiesInCells(world.grid.cellsInRect(x, y, w, h))
+func (world *World) QueryRect(x, y, w, h float32, tags ...string) []*Body {
+	return world.getBodiesInCells(world.grid.cellsInRect(x, y, w, h), tags...)
 }
 
-func (world *World) QueryPoint(x, y float32) []*Body {
+func (world *World) QueryPoint(x, y float32, tags ...string) []*Body {
 	bodies := []*Body{}
 	cell := world.grid.cellAt(x, y, false)
 	if cell == nil {
 		return []*Body{}
 	}
 	for _, body := range cell.bodies {
-		if body.containsPoint(x, y) {
+		if body.HasTag(tags...) && body.containsPoint(x, y) {
 			bodies = append(bodies, body)
 		}
 	}
 	return bodies
 }
 
-func (world *World) QuerySegment(x1, y1, x2, y2 float32) []*Body {
+func (world *World) QuerySegment(x1, y1, x2, y2 float32, tags ...string) []*Body {
 	bodies := []*Body{}
 	visited := map[*Body]bool{}
 	cells := world.grid.getCellsTouchedBySegment(x1, y1, x2, y2)
 	bodiesOnSegment := world.getBodiesInCells(cells)
 	for _, body := range bodiesOnSegment {
-		if _, ok := visited[body]; !ok {
+		if _, ok := visited[body]; !ok && body.HasTag(tags...) {
 			visited[body] = true
 			fraction, _, _ := body.getRayIntersectionFraction(x1, y1, x2-x1, y2-y1)
 			if fraction != inf {
@@ -68,12 +68,12 @@ func (world *World) QuerySegment(x1, y1, x2, y2 float32) []*Body {
 	return bodies
 }
 
-func (world *World) getBodiesInCells(cells []*Cell) []*Body {
+func (world *World) getBodiesInCells(cells []*Cell, tags ...string) []*Body {
 	dict := make(map[uint32]bool)
 	bodies := []*Body{}
 	for _, cell := range cells {
 		for id, body := range cell.bodies {
-			if _, ok := dict[id]; !ok {
+			if _, ok := dict[id]; !ok && body.HasTag(tags...) {
 				bodies = append(bodies, body)
 				dict[id] = true
 			}
