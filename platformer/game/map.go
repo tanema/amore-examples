@@ -84,6 +84,15 @@ func (m *Map) Update(dt, l, t, w, h float32) {
 	l, t, w, h = l-m.updateRadius, t-m.updateRadius, w+m.updateRadius*2, h+m.updateRadius*2
 	visibleObject := m.world.QueryRect(l, t, w, h)
 
+	By(func(a1, a2 *ump.Body) bool {
+		a, aok := m.objects[a1.ID]
+		b, bok := m.objects[a2.ID]
+		if !aok || !bok {
+			return true
+		}
+		return a.updateOrder() < b.updateOrder()
+	}).Sort(visibleObject)
+
 	for _, item := range visibleObject {
 		object, ok := m.objects[item.ID]
 		if ok {
