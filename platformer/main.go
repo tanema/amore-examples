@@ -44,7 +44,7 @@ func draw() {
 	w, h := gfx.GetWidth(), gfx.GetHeight()
 	stats := runtime.MemStats{}
 	runtime.ReadMemStats(&stats)
-	gfx.Printf(fmt.Sprintf("fps: %v, mem: %vKB", timer.GetFPS(), stats.HeapAlloc/1000), 200, gfx.ALIGN_RIGHT, w-200, h-40)
+	gfx.Printf(fmt.Sprintf("fps: %v, mem: %vKB", timer.GetFPS(), stats.HeapAlloc/1000000), 200, gfx.ALIGN_RIGHT, w-200, h-40)
 }
 
 func keypress(key keyboard.Key) {
