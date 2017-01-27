@@ -78,7 +78,7 @@ func (player *Player) moveColliding(dt float32) {
 	for _, col := range cols {
 		if col.Body.Tag() != "puff" {
 			player.changeVelocityByCollisionNormal(col.Normal.X, col.Normal.Y, 0)
-			player.onGround = col.Normal.Y < 1
+			player.onGround = col.Normal.Y == -1
 		}
 	}
 	player.l, player.t = l, t
