@@ -1,8 +1,7 @@
 package game
 
 import (
-	"math"
-
+	"github.com/tanema/amore/gfx"
 	"github.com/tanema/amore/keyboard"
 )
 
@@ -15,7 +14,8 @@ const (
 
 type Player struct {
 	*Sprite
-	lastFire float32
+	lastFire       float32
+	isAccelerating bool
 }
 
 func newPlayer() *Player {
@@ -31,6 +31,8 @@ func newPlayer() *Player {
 }
 
 func (player *Player) Update(dt float32) {
+	player.isAccelerating = false
+
 	if keyboard.IsDown(keyboard.KeyLeft) {
 		player.vrot = -playerRotationSpeed
 	} else if keyboard.IsDown(keyboard.KeyRight) {
@@ -40,8 +42,9 @@ func (player *Player) Update(dt float32) {
 	}
 
 	if keyboard.IsDown(keyboard.KeyUp) {
-		player.ay = -(playerAcc * float32(math.Cos(float64(player.rot))))
-		player.ax = playerAcc * float32(math.Sin(float64(player.rot)))
+		player.isAccelerating = true
+		player.ay = -(playerAcc * cos(player.rot))
+		player.ax = playerAcc * sin(player.rot)
 	} else {
 		player.ax = 0
 		player.ay = 0
@@ -63,9 +66,22 @@ func (player *Player) Update(dt float32) {
 	}
 
 	// limit the ship's speed
-	if math.Sqrt(float64(player.vx*player.vx+player.vy*player.vy)) > playerMaxSpeed {
+	if sqrt(player.vx*player.vx+player.vy*player.vy) > playerMaxSpeed {
 		player.vx *= 0.95
 		player.vy *= 0.95
+	}
+}
+
+func (player *Player) Draw() {
+	player.Sprite.Draw()
+
+	if player.isAccelerating {
+		points := player.Sprite.body.GetPoints()
+		gfx.PolyLine([]float32{
+			points[0] + (sin(player.rot) * -4), points[1] + (-cos(player.rot) * -4),
+			points[2] + (-sin(player.rot) * 30), points[3] + (cos(player.rot) * 30),
+			points[4] + (sin(player.rot) * -4), points[5] + (-cos(player.rot) * -4),
+		})
 	}
 }
 

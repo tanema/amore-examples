@@ -1,9 +1,5 @@
 package game
 
-import (
-	"math"
-)
-
 const (
 	bulletSpeed = 500
 )
@@ -13,8 +9,8 @@ type Bullet struct {
 }
 
 func newBullet(x, y, rot float32) *Bullet {
-	vectorx := float32(math.Sin(float64(rot)))
-	vectory := -float32(math.Cos(float64(rot)))
+	vectorx := sin(rot)
+	vectory := -cos(rot)
 
 	bullet := &Bullet{}
 	bullet.Sprite = NewSprite(bullet, "bullet", x+(vectorx*10), y+(vectory*10), 1,

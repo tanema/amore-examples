@@ -38,6 +38,10 @@ func New() {
 	keyboard.OnKeyUp = keyup
 	screenWidth = gfx.GetWidth()
 	screenHeight = gfx.GetHeight()
+	reset()
+}
+
+func reset() {
 	gameOver = false
 	score = 0
 	world = phys.NewWorld(screenWidth, screenHeight, cellSize)
@@ -49,12 +53,17 @@ func New() {
 		newAsteroid(),
 		newAsteroid(),
 		newAsteroid(),
+		newAsteroid(),
+		newAsteroid(),
 	}
 }
 
 func keyup(key keyboard.Key) {
 	if key == keyboard.KeyTab {
 		debug = !debug
+	}
+	if key == keyboard.KeyReturn {
+		reset()
 	}
 }
 

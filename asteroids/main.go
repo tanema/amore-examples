@@ -24,9 +24,6 @@ func update(deltaTime float32) {
 	if keyboard.IsDown(keyboard.KeyEscape) {
 		amore.Quit()
 	}
-	if keyboard.IsDown(keyboard.KeyReturn) {
-		game.New()
-	}
 	game.Update(deltaTime)
 }
 

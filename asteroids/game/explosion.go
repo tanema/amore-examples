@@ -1,9 +1,5 @@
 package game
 
-import (
-	"math"
-)
-
 const (
 	explosionSpeed = 100
 	explosionTime  = 3
@@ -29,9 +25,9 @@ func newExplosion(sprite *Sprite) {
 
 func (explosion *Explosion) addSegment(x0, y0, x1, y1 float32) {
 	sprite := NewSprite(nil, "explosion", 0, 0, 1, []float32{x0, y0, x1, y1}, false)
-	rot := math.Atan2(float64(x1-x0), float64(y1-y0))
-	vectorx := float32(math.Sin(float64(rot)))
-	vectory := -float32(math.Cos(float64(rot)))
+	rot := atan2(x1-x0, y1-y0)
+	vectorx := sin(rot)
+	vectory := -cos(rot)
 	sprite.vx = explosionSpeed * vectorx
 	sprite.vy = explosionSpeed * vectory
 	explosion.sprites = append(explosion.sprites, sprite)
