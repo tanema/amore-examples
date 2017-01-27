@@ -10,6 +10,8 @@ const (
 	playerMaxSpeed      = 400
 	playerRotationSpeed = 6
 	playerFireRate      = 0.40
+	playerJetSize       = 25
+	playerJetWidth      = 0.15
 )
 
 type Player struct {
@@ -78,9 +80,14 @@ func (player *Player) Draw() {
 	if player.isAccelerating {
 		points := player.Sprite.body.GetPoints()
 		gfx.PolyLine([]float32{
-			points[0] + (sin(player.rot) * -4), points[1] + (-cos(player.rot) * -4),
-			points[2] + (-sin(player.rot) * 30), points[3] + (cos(player.rot) * 30),
-			points[4] + (sin(player.rot) * -4), points[5] + (-cos(player.rot) * -4),
+			points[0] + ((points[4] - points[0]) * playerJetWidth),
+			points[1] + ((points[5] - points[1]) * playerJetWidth),
+
+			points[2] + (-sin(player.rot) * playerJetSize),
+			points[3] + (cos(player.rot) * playerJetSize),
+
+			points[4] + ((points[0] - points[4]) * playerJetWidth),
+			points[5] + ((points[1] - points[5]) * playerJetWidth),
 		})
 	}
 }
