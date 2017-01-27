@@ -10,6 +10,8 @@ import (
 	"github.com/tanema/amore/keyboard"
 )
 
+var debug bool
+
 type GameObject interface {
 	Update(dt float32)
 	Draw()
@@ -33,6 +35,7 @@ var (
 )
 
 func New() {
+	keyboard.OnKeyUp = keyup
 	screenWidth = gfx.GetWidth()
 	screenHeight = gfx.GetHeight()
 	gameOver = false
@@ -46,6 +49,12 @@ func New() {
 		newAsteroid(),
 		newAsteroid(),
 		newAsteroid(),
+	}
+}
+
+func keyup(key keyboard.Key) {
+	if key == keyboard.KeyTab {
+		debug = !debug
 	}
 }
 
@@ -70,10 +79,11 @@ func removeObject(object GameObject) {
 }
 
 func Draw() {
-	if keyboard.IsDown(keyboard.KeyG) {
+	if debug {
 		world.DrawGrid()
 		gfx.Print(fmt.Sprintf("objects: %v", len(objects)), 0, 15)
 	}
+
 	for _, object := range objects {
 		object.Draw()
 	}

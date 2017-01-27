@@ -2,7 +2,6 @@ package game
 
 import (
 	"github.com/tanema/amore/gfx"
-	"github.com/tanema/amore/keyboard"
 
 	"github.com/tanema/amore-examples/asteroids/game/phys"
 )
@@ -51,7 +50,7 @@ func (sprite *Sprite) UpdateMovement(delta float32) []*phys.Body {
 }
 
 func (sprite *Sprite) Draw() {
-	if keyboard.IsDown(keyboard.KeyG) {
+	if debug {
 		sprite.body.Draw()
 	}
 	gfx.PolyLine(sprite.body.GetPoints())
