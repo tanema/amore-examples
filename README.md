@@ -31,3 +31,7 @@ level of physics but it's nice to know that it's there.
 
 A pseudo 3d car racer implemented from the [codeincomplete.com](http://codeincomplete.com/posts/2012/6/22/javascript_racer/)
 tutorial. Assets are also from that tutorial.
+
+### platformer
+
+This is a re-implementation/port of [bump.lua](https://github.com/kikito/bump.lua) along with its example program
