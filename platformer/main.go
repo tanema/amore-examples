@@ -8,9 +8,9 @@ import (
 	"github.com/tanema/amore/gfx"
 	"github.com/tanema/amore/keyboard"
 	"github.com/tanema/amore/timer"
+	"github.com/tanema/lense"
 
 	"github.com/tanema/amore-examples/platformer/game"
-	"github.com/tanema/amore-examples/platformer/lense"
 )
 
 var (

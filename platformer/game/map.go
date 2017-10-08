@@ -1,7 +1,7 @@
 package game
 
 import (
-	"github.com/tanema/amore-examples/platformer/lense"
+	"github.com/tanema/lense"
 	"github.com/tanema/ump"
 )
 
