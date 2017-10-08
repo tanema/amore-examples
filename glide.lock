@@ -1,8 +1,8 @@
 hash: 9ebe3c2e5197bac643e22bc691e9526d7e784a5df9138c6a06191972e88ce047
-updated: 2017-01-22T18:17:35.814725276-05:00
+updated: 2017-07-31T22:50:18.958509981-04:00
 imports:
 - name: github.com/BurntSushi/toml
-  version: 99064174e013895bbd9b025c31100bd1d9b590ca
+  version: b26d9c308763d68093482582cea63d69be07a0f0
 - name: github.com/eaburns/bit
   version: 7bd5cd37375d2f05b48121d57a0304d339bc56fb
 - name: github.com/eaburns/flac

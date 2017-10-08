@@ -3,7 +3,7 @@ package game
 import (
 	"sort"
 
-	"github.com/tanema/amore-examples/platformer/ump"
+	"github.com/tanema/ump"
 )
 
 type (

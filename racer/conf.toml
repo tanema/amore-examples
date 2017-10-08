@@ -2,4 +2,5 @@ title = "Amore Racer" # The window title (string)
 width = 800           # The window width (number)
 height = 600          # The window height (number)
 vsync = true          # Enable vertical sync (boolean)
+msaa = 16             # The number of samples to use with multi-sampled antialiasing (number)
 centered = true       # Center the window in the display

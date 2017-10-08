@@ -2,7 +2,7 @@ package game
 
 import (
 	"github.com/tanema/amore-examples/platformer/lense"
-	"github.com/tanema/amore-examples/platformer/ump"
+	"github.com/tanema/ump"
 )
 
 type Map struct {

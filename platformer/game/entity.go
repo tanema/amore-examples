@@ -3,7 +3,7 @@ package game
 import (
 	"github.com/tanema/amore/timer"
 
-	"github.com/tanema/amore-examples/platformer/ump"
+	"github.com/tanema/ump"
 )
 
 const gravityAccel float32 = 500 // pixels per second^2
