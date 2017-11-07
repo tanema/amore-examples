@@ -53,7 +53,7 @@ func main() {
 	text, _ = gfx.NewColorTextExt(ttf,
 		[]string{file.ReadString("text/lorem.txt"), file.ReadString("text/lorem.txt")},
 		[]*gfx.Color{gfx.NewColor(255, 255, 255, 255), gfx.NewColor(255, 0, 255, 255)},
-		500, gfx.ALIGN_CENTER)
+		500, gfx.AlignCenter)
 	amore_text, _ = gfx.NewColorText(ttf, []string{"a", "m", "o", "r", "e"},
 		[]*gfx.Color{
 			gfx.NewColor(0, 255, 0, 255),
@@ -117,7 +117,7 @@ func keyUp(key keyboard.Key) {
 			bomb.Play()
 		}
 	case keyboard.Key3:
-		window.ShowMessageBox("title", "message", []string{"okay", "cancel"}, window.MESSAGEBOX_INFO, true)
+		window.ShowMessageBox("title", "message", []string{"okay", "cancel"}, window.MessageBoxInfo, true)
 	case keyboard.Key4:
 		triangle_mesh.SetVertexMap([]uint32{0, 1, 2})
 	case keyboard.Key5:
@@ -159,9 +159,9 @@ func draw() {
 
 	//stencil
 	gfx.Stencil(func() { gfx.Rect(gfx.FILL, 426, 240, 426, 240) })
-	gfx.SetStencilTest(gfx.COMPARE_EQUAL, 0)
+	gfx.SetStencilTest(gfx.CompareEqual, 0)
 	gfx.SetColor(239, 96, 17, 255)
-	gfx.Rect(gfx.FILL, 400, 200, 826, 440)
+	gfx.Rect("fill", 400, 200, 826, 440)
 	gfx.ClearStencilTest()
 
 	// rectangle
@@ -198,7 +198,7 @@ func draw() {
 
 	// image font
 	gfx.SetFont(image_font)
-	gfx.Printf("test one @ two", 150, gfx.ALIGN_JUSTIFY, 0, 0)
+	gfx.Printf("test one @ two", 150, gfx.AlignJustify, 0, 0)
 	// ttf font
 	gfx.SetFont(ttf)
 	gfx.Print("test one two", 200, 100, math.Pi/2, 2, 2)
