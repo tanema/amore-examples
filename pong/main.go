@@ -52,8 +52,9 @@ var (
 		color:  gfx.NewColor(255, 0, 0, 255),
 	}
 
-	blip, _ = audio.NewSource("audio/blip.wav", true)
-	bomb, _ = audio.NewSource("../test-all/assets/audio/bomb.wav", true)
+	scoreLabel *gfx.Text
+	blip, _    = audio.NewSource("audio/blip.wav", true)
+	bomb, _    = audio.NewSource("../test-all/assets/audio/bomb.wav", true)
 )
 
 func main() {
@@ -65,6 +66,10 @@ func main() {
 func load() {
 	screenWidth = gfx.GetWidth()
 	screenHeight = gfx.GetHeight()
+	scoreLabel, _ = gfx.NewText(
+		gfx.GetFont(),
+		fmt.Sprintf("%v : %v", enemy.score, player.score),
+	)
 }
 
 func update(dt float32) {
@@ -105,6 +110,8 @@ func update(dt float32) {
 	} else if keyboard.IsDown(keyboard.KeyDown) {
 		player.y += player.speed * dt
 	}
+
+	scoreLabel.Set(fmt.Sprintf("%v : %v", enemy.score, player.score))
 }
 
 func reset() {
@@ -120,12 +127,11 @@ func reset() {
 }
 
 func draw() {
-	scoreLabel := fmt.Sprintf("%v : %v", enemy.score, player.score)
-	halfWidth := gfx.GetFont().GetWidth(scoreLabel) / 2
+	halfWidth := scoreLabel.GetWidth() / 2
 	gfx.SetColor(255, 255, 255, 255)
-	gfx.Print(fmt.Sprintf("%v : %v", enemy.score, player.score), gfx.GetWidth()/2-halfWidth, 10)
+	scoreLabel.Draw((screenWidth/2)-halfWidth, 0)
 	gfx.SetLineWidth(3)
-	gfx.Line(gfx.GetWidth()/2+1, 25, gfx.GetWidth()/2+1, gfx.GetHeight())
+	gfx.Line(screenWidth/2+1, 25, screenWidth/2+1, screenHeight)
 
 	ball.Draw()
 	enemy.Draw()

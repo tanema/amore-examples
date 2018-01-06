@@ -40,8 +40,8 @@ func main() {
 	canvas = gfx.NewCanvas(800, 600)
 	tree, _ = gfx.NewImage("images/palm_tree.png")
 	quad = gfx.NewQuad(0, 0, 200, 200, tree.GetWidth(), tree.GetHeight())
-	ttf = gfx.NewFont("fonts/arialbd.ttf", 20)
-	image_font = gfx.NewImageFont("fonts/image_font.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"")
+	ttf, _ = gfx.NewTTFFont("fonts/arialbd.ttf", 20)
+	image_font, _ = gfx.NewImageFont("fonts/image_font.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456790.,!?-+/():;%&`'*#=[]\"")
 	image_font.SetFallbacks(ttf)
 	shader = gfx.NewShader("shaders/blackandwhite.glsl")
 	var er error
@@ -53,7 +53,7 @@ func main() {
 	text, _ = gfx.NewColorTextExt(ttf,
 		[]string{file.ReadString("text/lorem.txt"), file.ReadString("text/lorem.txt")},
 		[]*gfx.Color{gfx.NewColor(255, 255, 255, 255), gfx.NewColor(255, 0, 255, 255)},
-		500, gfx.AlignCenter)
+		600, gfx.AlignLeft)
 	amore_text, _ = gfx.NewColorText(ttf, []string{"a", "m", "o", "r", "e"},
 		[]*gfx.Color{
 			gfx.NewColor(0, 255, 0, 255),
@@ -150,7 +150,7 @@ func draw() {
 	gfx.SetLineWidth(1)
 	//text
 	gfx.Draw(text, 0, 300)
-	gfx.Rect(gfx.LINE, 0, 300, 500, text.GetHeight())
+	gfx.Rect(gfx.LINE, 0, 300, text.GetWidth(), text.GetHeight())
 
 	gfx.SetLineWidth(10)
 
@@ -198,14 +198,14 @@ func draw() {
 
 	// image font
 	gfx.SetFont(image_font)
-	gfx.Printf("test one @ two", 150, gfx.AlignJustify, 0, 0)
+	gfx.Print("test one two", 0, 0)
 	// ttf font
 	gfx.SetFont(ttf)
 	gfx.Print("test one two", 200, 100, math.Pi/2, 2, 2)
 
 	//FPS
 	gfx.SetColor(0, 170, 170, 255)
-	gfx.Print(fmt.Sprintf("fps: %v", timer.GetFPS()), 1200, 10)
+	gfx.Print(fmt.Sprintf("fps: %v", timer.GetFPS()), 1200, 0)
 
 	gfx.Draw(psystem, 200, 200)
 

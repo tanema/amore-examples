@@ -96,7 +96,7 @@ func Draw() {
 	for _, object := range objects {
 		object.Draw()
 	}
-	gfx.Print(fmt.Sprintf("Score: %v", score), screenWidth-75, 0)
+	gfx.Print(fmt.Sprintf("Score: %v", score), screenWidth-100, 0)
 	if gameOver {
 		if len(objects) == 1 && objects[0] == player {
 			gfx.Print("Game Over. You Won.", screenWidth/2-175, screenHeight/2, 0, 2, 3)
