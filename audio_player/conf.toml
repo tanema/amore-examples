@@ -1,0 +1,8 @@
+title = "amore player"      # The window title (string)
+width = 384               # The window width (number)
+height = 300              # The window height (number)
+resizable = false          # Let the window be user-resizable (boolean)
+vsync = true              # Enable vertical sync (boolean)
+msaa = 16                 # The number of samples to use with multi-sampled antialiasing (number)
+srgb = true               # Enable sRGB gamma correction when drawing to the screen (boolean)
+centered = true           # Center the window in the display
