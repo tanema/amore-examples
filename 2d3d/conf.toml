@@ -1,0 +1,10 @@
+title = "2d 3d experiment"   # The window title (string)
+width = 300               # The window width (number)
+height = 300              # The window height (number)
+borderless = false        # Remove all border visuals from the window (boolean)
+vsync = true              # Enable vertical sync (boolean)
+msaa = 16                 # The number of samples to use with multi-sampled antialiasing (number)
+highdpi = true            # Enable high-dpi mode for the window on a Retina display (boolean)
+srgb = true               # Enable sRGB gamma correction when drawing to the screen (boolean)
+centered = true           # Center the window in the display
+resizable = true
