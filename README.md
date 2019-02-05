@@ -1,3 +1,5 @@
+# These no longer work and this repo is no longer maintained
+
 # amore-examples
 
 Examples meant to demonstrate the [Amore Game Framework](https://github.com/tanema/amore)
